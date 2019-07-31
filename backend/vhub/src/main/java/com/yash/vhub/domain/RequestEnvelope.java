@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.lang.Nullable;
 
@@ -70,6 +71,9 @@ public class RequestEnvelope {
 	@OneToMany
 	@JoinColumn(name="request_envelope_id")
 	Set<ResourceRequest> resourceRequests = new HashSet<>();
+	
+	@Transient
+	private int numberOfRequestedResources;
 
 	@ManyToMany
 	@JoinTable(
@@ -78,5 +82,9 @@ public class RequestEnvelope {
 			inverseJoinColumns = {@JoinColumn(name="user_id")}
 			)
 	private Set<User> approvers = new HashSet<>();
+	
+	public void setNumberOfRequestedResources() {
+		this.numberOfRequestedResources = this.getResourceRequests().size();
+	}
 	
 }
