@@ -10,15 +10,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="skills")
+@Table(name="proposal_type")
 @Data @NoArgsConstructor
-public class Skill {
+public class ProposalType {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-	private String skill;
-	
-	private String description;
+	private String type;
 }
