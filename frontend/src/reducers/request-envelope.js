@@ -17,7 +17,7 @@ function requestRequestEnvelope(state, action) {
 }
 
 function receiveRequestEnvelope(state, action) {
-    // console.log("received request envelope: " , action);
+    console.log("received request envelope: " , action);
     return {
         ...state,
         isFetching: false,

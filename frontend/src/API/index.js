@@ -61,6 +61,10 @@ export class Repository {
         }
     }
 
+    async getAll(config={}) {
+        return this.get(undefined, config);
+    }
+
     async patch(data, dataId, config={}) {
         const id = this.getId(data, dataId)
         try {

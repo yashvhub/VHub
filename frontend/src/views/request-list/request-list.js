@@ -12,7 +12,7 @@ class RequestList extends React.Component{
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.requestListData();
     }
 
@@ -29,28 +29,28 @@ class RequestList extends React.Component{
             return (
                 <Table.Row key={requestList.id}>
                     <Table.Cell>
-                        <Link to={`/request/${requestList.id}`}>{requestList.requestID}</Link>
+                        <Link to={`/request/${requestList.id}`}>{requestList.id}</Link>
                     </Table.Cell>
                     <Table.Cell>
-                        {requestList.jobPostingID}
+                        {requestList.jobPosting}
                     </Table.Cell>
                     <Table.Cell>
-                        {requestList.requestedData}
+                        {requestList.requestDate}
                     </Table.Cell>
                     <Table.Cell>
-                        {requestList.requestor}
+                        {`${requestList.requester.firstName} ${requestList.requester.lastName}`}
                     </Table.Cell>
                     <Table.Cell>
-                        {requestList.numberOfResources}
+                        {requestList.numberOfRequestedResources}
                     </Table.Cell>
                     <Table.Cell>
-                        {requestList.client}
+                        {requestList.clientName}
                     </Table.Cell>
                     <Table.Cell>
                         {requestList.manager}
                     </Table.Cell>
                     <Table.Cell>
-                        <Link to={`/confirm/${requestList.requestID}`}>{requestList.status}</Link>
+                        <Link to={`/confirm/${requestList.id}`}>{requestList.requestStatus.status}</Link>
                     </Table.Cell>
                     <Table.Cell>
                         <a  style={{textDecoration:'none', cursor:'pointer'}} key={requestList.id}  onClick={this.onOpenModal}>Details</a>
