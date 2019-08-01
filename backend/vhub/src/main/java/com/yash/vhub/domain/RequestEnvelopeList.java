@@ -3,26 +3,24 @@ package com.yash.vhub.domain;
 import java.util.Date;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 @Projection(
-		name="RequestEnvelopeSummary",
+		name="ListRequestEnvelope",
 		types= {
 				RequestEnvelope.class
 		})
-public interface RequestEnvelopeSummary {
+public interface RequestEnvelopeList {
 	long getId();
 	User getRequester();
-	User getInterviewer();
 	RequestStatus getRequestStatus();
 	JobPosting getJobPosting();
-	Location getLocationPreference();
 	Date getRequestDate();
-	String getBusinessCase();
 	String getClientName();
-	String getTeam();
 	String getManager();
 	Set<ResourceRequest> getResourceRequests();
-	Set<User> getApprovers();
+	@Value("#{target.getNumberOfRequestedResources()}")
+	int getNumberOfRequestedResources();
 	
 }

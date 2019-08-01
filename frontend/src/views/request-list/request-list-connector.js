@@ -1,17 +1,18 @@
 import {connect} from 'react-redux';
 import RequestList from './request-list';
-import requestListData from "../../action-creators/request-list";
+import {fetchRequestEnvelopeList} from "../../action-creators/request-list";
 
 function mapStateToProps(state) {
     return {
-        requestLists: state.requestLists
+        isFetching: state.requestLists.isFetching,
+        requestLists: state.requestLists.data
     }
 }
 
 function mapDispatchToProps(dispatch) {
-    return {
+    return { 
         requestListData: () => {
-            dispatch(requestListData())
+            dispatch(fetchRequestEnvelopeList())
         }
     }
 }
