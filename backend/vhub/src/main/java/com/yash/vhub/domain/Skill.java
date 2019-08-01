@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="skill")
+@Table(name="skills")
 @Data @NoArgsConstructor
 public class Skill {
 
