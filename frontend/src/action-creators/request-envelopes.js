@@ -25,7 +25,7 @@ export function fetchRequestEnvelope(id) {
     return async function(dispatch,getState) {
         try {
             dispatch(requestRequestEnvelope())
-            const response = await RequestEnvelopes.get(id, {params: {projection:"FullRequestEnvelope"}});
+            const response = await RequestEnvelopes.get(id, {params: {projection:"RequestEnvelopeSummary"}});
             if(!getState().requestEnvelope.didInvalidate){
                 dispatch(receiveRequestEnvelope(response));
             }
