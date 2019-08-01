@@ -68,13 +68,22 @@ public class RequestEnvelope {
 
 	private String manager;
 	
+	@ManyToOne
+	@JoinColumn(name="proposal_type_id")
+	private ProposalType proposalType;
+	
 	@OneToMany
 	@JoinColumn(name="request_envelope_id")
 	Set<ResourceRequest> resourceRequests = new HashSet<>();
 	
-	@Transient
-	private int numberOfRequestedResources;
-
+	@ManyToMany
+	@JoinTable(
+			name="request_envelope_resources_jt",
+			joinColumns = {@JoinColumn(name="request_envelope_id")},
+			inverseJoinColumns = {@JoinColumn(name="resource_id")}
+			)
+	private Set<Resource> selectedResources = new HashSet<>();
+	
 	@ManyToMany
 	@JoinTable(
 			name="request_envelope_approvers_jt",
@@ -83,8 +92,14 @@ public class RequestEnvelope {
 			)
 	private Set<User> approvers = new HashSet<>();
 	
+	@Transient
+	private int numberOfRequestedResources;
+	
 	public void setNumberOfRequestedResources() {
-		this.numberOfRequestedResources = this.getResourceRequests().size();
+		this.numberOfRequestedResources = this.getResourceRequests()
+				.stream()
+				.mapToInt(ResourceRequest::getCount)
+				.sum();
 	}
 	
 }
