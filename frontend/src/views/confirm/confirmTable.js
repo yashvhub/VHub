@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Table } from 'semantic-ui-react';
+import { Table , Checkbox, Icon} from 'semantic-ui-react';
 
 class ConfirmTable extends React.Component{
     constructor(props){
@@ -9,27 +9,50 @@ class ConfirmTable extends React.Component{
     }
 
     render(){
+        let skillArray = [];
+
+        this.props.resources.map((resources) => {
+            {resources.skills.map(skills => (
+                skillArray.includes(skills.skill) ? null : skillArray.push(skills.skill)
+            ))}
+        })
+
+        console.log(this.props.resources)
+
         return(
-            <Table celled>
+            <Table celled structured>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell>Name of Resource</Table.HeaderCell>
-                        <Table.HeaderCell>Resume</Table.HeaderCell>
+                        <Table.HeaderCell rowSpan='2'>Approve?</Table.HeaderCell>
+                        <Table.HeaderCell rowSpan='2'>Name</Table.HeaderCell>
+                        <Table.HeaderCell rowSpan='2'>Resume</Table.HeaderCell>
+                        <Table.HeaderCell colSpan={skillArray.length}>Languages</Table.HeaderCell>
+                    </Table.Row>
+                    <Table.Row>
+                    {skillArray.map(skills => (
+                        <Table.HeaderCell>{skills}</Table.HeaderCell>
+                    ))}
                     </Table.Row>
                 </Table.Header>
+
                 <Table.Body>
-                    <Table.Row>
-                        <Table.Cell>John Lilki</Table.Cell>
-                        <Table.Cell><Link to='#'>JL.Resume</Link></Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>Jamie Harington</Table.Cell>
-                        <Table.Cell><Link to='#'>JH.Resume</Link></Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>Jill Mooney</Table.Cell>
-                        <Table.Cell><Link to='#'>JM.Resume</Link></Table.Cell>
-                    </Table.Row>
+                    {this.props.resources.map(resource => (
+                        <Table.Row>
+                            <Table.Cell collapsing>
+                            <Checkbox toggle />
+                            </Table.Cell>
+                            <Table.Cell>{resource.name}</Table.Cell>
+                            <Table.Cell><Link to='#'>{resource.resumeLink}</Link></Table.Cell>
+                            {skillArray.map(skill => ( 
+                                    <Table.Cell textAlign='center'>
+                                        {resource.skills.filter(s => s.skill === skill).length ? 
+                                        <Icon color='green' name='checkmark' size='large' /> : null
+                                        }
+                                    </Table.Cell>
+                                    
+                            ))}
+                        </Table.Row>
+                    ))}
                 </Table.Body>
             </Table>
         );

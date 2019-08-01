@@ -1,23 +1,30 @@
 import {connect} from 'react-redux';
 import confirm from './confirm';
 import {confirmInterview, saveInterviewRequest} from '../../action-creators/confirm';
+import {fetchRequestEnvelope} from '../../action-creators/request-envelopes';
 
-function mapStateToProps(state, props){
-    let urlID = Number(props.match.params.id);
+function mapStateToProps({requestEnvelope}){
+    console.log(requestEnvelope)
     return {
-        requestLists: state.requestLists.find(({id}) => id === urlID),
+        requestEnvelope: requestEnvelope.item
     }
     
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
     return {
         confirmInterviewRequest: () => {
             dispatch(confirmInterview())
         },
+        fetchRequestEnvelope: () => {
+            dispatch(fetchRequestEnvelope(ownProps.match.params.id))
+        },
         saveInterviewRequest: () => {
             dispatch(saveInterviewRequest())
         },
+        // requestSelectedResources: () => {
+        //     dispatch()
+        // }
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(confirm);

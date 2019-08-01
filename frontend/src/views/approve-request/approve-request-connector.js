@@ -3,7 +3,7 @@ import approveRequest from './approve-request';
 import {fetchRequestEnvelope} from '../../action-creators/request-envelopes';
 
 function mapStateToProps({requestEnvelope},ownProps){
-
+    
     return{
         requestEnvelope: requestEnvelope.item
     }
