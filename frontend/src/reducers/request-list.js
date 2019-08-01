@@ -4,8 +4,7 @@ function blankState(){
     return [];
 }
 function fetchRequestListsData(state, action) {
-    console.log("action: ", action);
-    return action.RequestEnvelopes;
+    return action.apiUrl;
 }
 
 export default function (state = blankState(), action) {
