@@ -25,9 +25,11 @@ export function fetchRequestEnvelopeList() {
     return async function(dispatch,getState) {
         try {
             dispatch(requestRequestListsData())
-            const response = await RequestEnvelopes.getAll({params: {projection:"ListRequestEnvelope"}});
-            if(!getState().requestEnvelope.didInvalidate){
+            const [response, status] = await RequestEnvelopes.getAll({params: {projection:"ListRequestEnvelope"}});
+            if(response && !getState().requestLists.didInvalidate){
                 dispatch(receiveRequestListData(response));
+            } else {
+                dispatch(invalidateRequestListData());
             }
         } catch (e) {
             dispatch(invalidateRequestListData())

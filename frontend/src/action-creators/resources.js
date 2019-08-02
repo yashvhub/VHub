@@ -22,20 +22,24 @@ export function invalidateResources() {
 }
 
 export function fetchResources({name, skill}) {
-    return async function(dispatch) {
+    return async function(dispatch, getState) {
         try {
             dispatch(requestResources())
-            let response;
+            let response, status;
             if (name && skill) {
-                response = await Resources.getByNameAndSkill(name, skill);
+                [response, status] = await Resources.getByNameAndSkill(name, skill);
             } else if (name) {
-                response = await Resources.getByName(name);
+                [response, status] = await Resources.getByName(name);
             } else if (skill) {
-                response = await Resources.getBySkill(skill);
+                [response, status] = await Resources.getBySkill(skill);
             } else {
-                response = await Resources.get();
+                [response, status] = await Resources.get();
             }
-            dispatch(receiveResources(response));
+            if (response && !getState().resources.didInvalidate) {
+                dispatch(receiveResources(response));
+            } else {
+                dispatch(invalidateResources());
+            }
         } catch (e) {
             dispatch(invalidateResources())
             console.error(e);

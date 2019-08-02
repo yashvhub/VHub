@@ -20,7 +20,8 @@ function receiveResources(state, action) {
     return {
         ...state,
         isFetching: false,
-        items: action.resources.resources,
+        items: action.resources.data.resources,
+        page: action.resources.page,
         lastUpdated: Date.now()
     }
 }

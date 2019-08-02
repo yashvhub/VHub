@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const DEFAULT_CONFIG = {
-    baseURL: "http://10.27.12.183:8080/api/"
+    baseURL: "http://10.27.12.26:8080/api/"
 }
 const API = axios.create(DEFAULT_CONFIG);
 
@@ -14,12 +14,12 @@ export class Repository {
     getData({data, status, statusText}) {
         if (status >= 200 && status < 300) {
             if(data && data._embedded) {
-                return data._embedded;
+                return [{data: data._embedded, page: data.page}, null];
             } else {
-                return data;
+                return [{data}, null];
             }
         } else {
-            return `${status}: ${statusText}`;
+            return [null, {status, statusText}];
         }
     }
 
