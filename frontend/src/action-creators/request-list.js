@@ -21,11 +21,22 @@ export function invalidateRequestListData() {
 }
 
 
-export function fetchRequestEnvelopeList() {
+export function fetchRequestEnvelopeList(name, page={}) {
+    const config = {
+        params: {
+            projection: "ListRequestEnvelope",
+            ...page
+        }
+    };
     return async function(dispatch,getState) {
         try {
             dispatch(requestRequestListsData())
-            const [response, status] = await RequestEnvelopes.getAll({params: {projection:"ListRequestEnvelope"}});
+            let [response, status];
+            if(name) {
+                [response, status] = await RequestEnvelopes.getByRequesterName(name, config)
+            } else {
+                [response, status] = await RequestEnvelopes.getAll(config)
+            }
             if(response && !getState().requestLists.didInvalidate){
                 dispatch(receiveRequestListData(response));
             } else {
