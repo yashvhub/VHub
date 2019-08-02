@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Form, Grid, Input, Label} from 'semantic-ui-react';
+import {Form, Grid, Input, Label, Divider} from 'semantic-ui-react';
 
  class ApproveResourceForm extends React.Component{
     constructor(props){
@@ -32,6 +32,7 @@ import {Form, Grid, Input, Label} from 'semantic-ui-react';
                 <Form.Group>
                     {skills}
                 </Form.Group>
+                <Divider section/>
             </>
         )
     }

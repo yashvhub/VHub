@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Message, Grid, Button, FormGroup, Loader } from 'semantic-ui-react';
+import { Form, Message, Grid, Button, FormGroup, Loader, Divider } from 'semantic-ui-react';
 import ApproveResourceForm from './approve-resourceForm-connector';
 import { Redirect } from 'react-router-dom';
 
@@ -61,7 +61,7 @@ class ApproveRequestForm extends React.Component {
                             <Form.Input fluid label='Location Preference' placeholder='Location' value={this.props.requestEnvelope.locationPreference.stateOrProvince} readOnly />
                         </Form.Group>
 
-                        <br />
+                        <Divider section/>
                         {resources}
                         <Form.TextArea label='Comments' placeholder='Comments...' rows='6' />
 
