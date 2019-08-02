@@ -23,7 +23,7 @@ public interface RequestEnvelopeFull {
 	String getTeam();
 	String getManager();
 	ProposalType getProposalType();
-//	Set<ResourceRequest> getResourceRequests();
+	Set<ResourceRequestSummary> getResourceRequests();
 	Set<ResourceSummary> getSelectedResources();
 	Set<User> getApprovers();
 	
