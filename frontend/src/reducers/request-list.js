@@ -20,7 +20,8 @@ function receiveRequestListData(state, action) {
     return {
         ...state,
         isFetching: false,
-        data: action.requestListData.requestEnvelopes,
+        data: action.requestListData.data.requestEnvelopes,
+        page: action.requestListData.page,
         lastUpdated: Date.now()
     }
 }

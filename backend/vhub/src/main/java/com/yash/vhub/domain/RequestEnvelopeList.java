@@ -19,7 +19,6 @@ public interface RequestEnvelopeList {
 	Date getRequestDate();
 	String getClientName();
 	String getManager();
-//	Set<ResourceRequest> getResourceRequests();
 	@Value("#{target.getNumberOfRequestedResources()}")
 	int getNumberOfRequestedResources();
 	

@@ -25,9 +25,11 @@ export function fetchRequestEnvelope(id) {
     return async function(dispatch,getState) {
         try {
             dispatch(requestRequestEnvelope())
-            const response = await RequestEnvelopes.get(id, {params: {projection:"FullRequestEnvelope"}});
-            if(!getState().requestEnvelope.didInvalidate){
-                dispatch(receiveRequestEnvelope(response));
+            const [response, status] = await RequestEnvelopes.get(id, {params: {projection:"FullRequestEnvelope"}});
+            if(response && !getState().requestEnvelope.didInvalidate){
+                dispatch(receiveRequestEnvelope(response.data));
+            } else {
+                dispatch(invalidateRequestEnvelope());
             }
         } catch (e) {
             dispatch(invalidateRequestEnvelope())

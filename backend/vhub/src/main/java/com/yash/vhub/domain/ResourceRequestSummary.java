@@ -1,5 +1,7 @@
 package com.yash.vhub.domain;
 
+import java.util.Set;
+
 import org.springframework.data.rest.core.config.Projection;
 
 @Projection(
@@ -11,4 +13,5 @@ public interface ResourceRequestSummary {
 	int getCount();
 	double getHourlyRate();
 	int getYearsOfExperience();
+	Set<Skill> getSkills();
 }

@@ -26,9 +26,8 @@ public class ResourceRequest {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-	@ManyToOne
-	@JoinColumn(name="request_envelope_id")
-	private RequestEnvelope requestEnvelope;
+	@Column(name="request_envelope_id")
+	private long requestEnvelopeId;
 	
 	private int count;
 	
