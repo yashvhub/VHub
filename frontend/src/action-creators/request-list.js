@@ -33,7 +33,7 @@ export function fetchRequestEnvelopeList(name, page={}) {
             dispatch(requestRequestListsData())
             let response, status;
             if(name) {
-                [response, status] = await RequestEnvelopes.getByRequesterName(name, config)
+                [response, status] = await RequestEnvelopes.getByName(name, config)
             } else {
                 [response, status] = await RequestEnvelopes.getAll(config)
             }

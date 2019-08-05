@@ -4,6 +4,10 @@ function blankState(){
     return {
         isFetching: false,
         didInvalidate: false,
+        page: {
+            totalPages: 0,
+            size: 5
+        },
         data: [],
     };
 }
