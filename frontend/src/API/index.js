@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 export const DEFAULT_CONFIG = {
-    baseURL: "http://10.27.12.26:8080/api/"
+    baseURL: "http://10.27.12.78:8080/api/",
+    validateStatus: function (status) {
+        return true;
+    }
 }
 const API = axios.create(DEFAULT_CONFIG);
 
@@ -11,7 +14,7 @@ export class Repository {
         this.url = url;
     }
 
-    getData({data, status, statusText}) {
+    getData({status, statusText, data}) {
         if (status >= 200 && status < 300) {
             if(data && data._embedded) {
                 return [{data: data._embedded, page: data.page}, null];
@@ -19,7 +22,7 @@ export class Repository {
                 return [{data}, null];
             }
         } else {
-            return [null, {status, statusText}];
+            return [null, {status, statusText: statusText || data}];
         }
     }
 

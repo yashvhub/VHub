@@ -6,13 +6,14 @@ class UserCard extends React.Component{
         super(props)
     }
 
-    render(props){
+    render(){
+        console.log(this.props);
         return(
             <Card
             image=''
-            header='Nick Stone'
-            meta='Software Engineer'
-            description='Yash Technologies'
+            header={`${this.props.user.firstName} ${this.props.user.lastName}`}
+            meta={this.props.user.title}
+            description={this.props.user.company}
           />
         )
     }
