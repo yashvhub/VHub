@@ -3,7 +3,6 @@ import login from './login';
 import {login as doLogin} from '../../action-creators/login';
 
 const mapStateToProps = (state) => {
-    console.log(state.login.user, state.login.isPending, state.login.status);
     return ({
     user: state.login.user,
     isPending: state.login.isPending,

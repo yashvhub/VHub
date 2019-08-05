@@ -5,7 +5,6 @@ import { Redirect } from 'react-router-dom';
 import { Message } from 'semantic-ui-react';
 
 function LoginPage({doLogin, user, isPending, error}){
-    console.log('<LoginPage/>', doLogin, user, isPending, error);
     if(user) {
         return <Redirect to='/home'/>
     }

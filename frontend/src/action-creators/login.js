@@ -51,7 +51,6 @@ export function login(email, password) {
                 dispatch(loginFailed(status));
             }
         } catch (e) {
-            console.log('login caught', e);
             dispatch(loginFailed({status: 'Something went wrong while logging in. Try again later.'}))
         }
     }

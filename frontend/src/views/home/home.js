@@ -6,7 +6,6 @@ import {Grid, Loader} from 'semantic-ui-react';
 import {Redirect} from 'react-router-dom';
 
 function Home({user, isPending}){
-    console.log('<Home/>', user);
     if(!user && !isPending) {
         return <Redirect to='/'/>
     } else if (!user) {

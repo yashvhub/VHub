@@ -8,7 +8,6 @@ function blankState(){
 
 
 function loginPending(state, action) {
-    console.log(`loginPending()`);
     return {
         ...state,
         isPending: true
@@ -16,7 +15,6 @@ function loginPending(state, action) {
 }
 
 function loginSuccess(state, action) {
-    console.log(`loginSuccess()`);
     return {
         ...state,
         isPending: false,
@@ -27,7 +25,6 @@ function loginSuccess(state, action) {
 }
 
 function loginFailed(state, action) {
-    console.log(`loginFailed()`);
     return {
         ...state,
         isPending: false,
