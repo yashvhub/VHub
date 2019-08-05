@@ -20,7 +20,7 @@ function Routing(){
             <Route path='/confirm/:id' component={ConfirmPage}/>
             <Route path="/proposals" component={Proposals}/>
             <Route path='/request' exact component={Request}/>
-            <Route path='/request/:id' component={ApproveRequest}/>
+            <Route path='/request/:id/approve' component={ApproveRequest}/>
         </Router>
         </div>
     )

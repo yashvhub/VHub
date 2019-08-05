@@ -29,7 +29,7 @@ class RequestList extends React.Component{
             return (
                 <Table.Row key={requestList.id}>
                     <Table.Cell>
-                        <Link to={`/request/${requestList.id}`}>{requestList.id}</Link>
+                        <Link to={`/request/${requestList.id}/approve`}>{requestList.id}</Link>
                     </Table.Cell>
                     <Table.Cell>
                         {requestList.jobPosting}
