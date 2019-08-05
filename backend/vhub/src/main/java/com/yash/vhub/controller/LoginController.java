@@ -5,6 +5,7 @@ import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,12 +35,17 @@ public class LoginController {
 			if (user.comparePassword(password)) {
 				return user;
 			} else {
-				return ResponseEntity.status(401).body("Unauthorized");
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login or password.");
 			}
 			//
 		} catch (NullPointerException ex) {
-			return ResponseEntity.status(401).body("Unauthorized.");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login or password.");
 		}
+	}
+	
+	@GetMapping("/logout")
+	Object logout() {
+		return ResponseEntity.status(200).body("Successfully Logged Out.");
 	}
 	
 }
