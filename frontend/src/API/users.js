@@ -15,6 +15,17 @@ class UserRepository extends Repository {
             console.error(e);
         }
     }
+
+    async logout(config={}) {
+        try {
+            const response = await API.get('logout', {
+                ...config
+            });
+            return this.getData(response);
+        } catch (e) {
+            console.error(e);
+        }
+    } 
 }
 
 const Users = new UserRepository('users');

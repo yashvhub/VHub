@@ -1,4 +1,8 @@
 import {connect} from 'react-redux';
 import home from './home';
 
-export default connect()(home);
+const mapStateToProps = ({login}) => ({
+    ...login
+})
+
+export default connect(mapStateToProps)(home);
