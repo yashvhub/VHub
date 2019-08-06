@@ -18,9 +18,10 @@ function Routing(){
             <Route path="/" exact component={LoginPage}/>
             <Route path="/request-list" component={RequestList}/>
             <Route path='/confirm/:id' component={ConfirmPage}/>
-            <Route path="/proposals" component={Proposals}/>
             <Route path='/request' exact component={Request}/>
             <Route path='/request/:id/approve' component={ApproveRequest}/>
+            <Route path="/request/:id/resource-request/:resourceRequestId/proposals" exact component={Proposals}/>
+            <Route path="/request/:id/resource-request/:resourceRequestId/proposals/:propasalId" component={Proposals}/>
         </Router>
         </div>
     )
