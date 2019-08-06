@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const DEFAULT_CONFIG = {
-    baseURL: "http://10.27.12.78:8080/api/",
+    baseURL: process.env.REACT_APP_API_BASE_URI,
     validateStatus: function (status) {
         return true;
     }
