@@ -68,8 +68,8 @@ class ApproveRequestForm extends React.Component {
                         <Message success header='Form Completed' content="Request Approved Successfully" />
 
                         <FormGroup widths='equal'>
-                            <Button>Save Request</Button>
-                            <Button onClick={approve}>Save And Approve</Button>
+                            <Button icon='save' label='Save Request'/>
+                            <Button icon='check' label='Save And Approve' onClick={approve}/>
                         </FormGroup>
 
                     </Form>
