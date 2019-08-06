@@ -10,7 +10,10 @@ function RequestList({requestLists, requestListData, isFetching, page}) {
     }, [requestListData]);
 
     const handleSearchChange = (e, {value}) => {
-        setSearch(value)
+        setSearch(value);
+        if(value === ''){
+            requestListData()
+        }
     };
 
     const onSearchClick = () => {
