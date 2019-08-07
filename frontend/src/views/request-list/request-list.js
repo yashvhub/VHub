@@ -56,7 +56,7 @@ function RequestList({requestLists, requestListData, isFetching, page}) {
 
     return (
         <div>
-            <Grid centered columns='8'>
+            <Grid columns='6'>
                 <Grid.Row>
                     <Grid.Column width='4'>
                         <Form.Input

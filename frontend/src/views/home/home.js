@@ -4,6 +4,7 @@ import UserCard from './userCard';
 import VendorList from './vendorList';
 import {Grid, Loader} from 'semantic-ui-react';
 import {Redirect} from 'react-router-dom';
+import RequestList from "../request-list/request-list-connector";
 
 function Home({user, isPending}){
     if(!user && !isPending) {
@@ -13,11 +14,11 @@ function Home({user, isPending}){
     }
     return (
         <Grid columns={2} container>
-            <Grid.Column width={6}>
+            <Grid.Column width={4}>
                 <UserCard user={user}/>
             </Grid.Column>
-            <Grid.Column width={10}>
-                <VendorList/>
+            <Grid.Column width={12}>
+                <RequestList/>
             </Grid.Column>
         </Grid>
     );
