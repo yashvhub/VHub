@@ -15,8 +15,8 @@ function Routing(){
         <Header/>
         <Router>
             <Route path="/home" component={Home}/>
-            <Route path="/" exact component={LoginPage}/>
-            <Route path="/request-list" component={RequestList}/>
+            <Route path="/" exact component={LoginPage}/>       
+            {/* <Route path="/request-list" component={RequestList}/> */}
             <Route path='/confirm/:id' component={ConfirmPage}/>
             <Route path='/request' exact component={Request}/>
             <Route path='/request/:id/approve' component={ApproveRequest}/>
