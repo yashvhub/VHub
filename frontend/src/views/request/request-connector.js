@@ -1,26 +1,27 @@
 import {connect} from 'react-redux';
 import request from './request';
-import {addNewResourceRequest} from '../../action-creators/request';
+import {addNewResource, handleChange, createNewRequest, initializeRequest} from '../../action-creators/request';
 
-function mapStateToProps(state,ownProps){
-    const interviewers = [
+function mapStateToProps(state){
+    console.log(state)
+    // const currentUser = state.login.user.firstName +' '+ state.login.user.lastName;
+    const currentUser = 'Asshole'
+    const interviewerOptions = [
         {key:'1', text:'Seymore Butts', value:'Seymore Butts'},
         {key:'2', text:'Gene Vagine', value:'Gene Vagine'},
         {key:'3', text:'Rick Sanchez', value:'Rick Sanchez'}
     ]
-    const approvers = [
+    const approverOptions = [
         {key:'1', text:'Seymore Butts', value:'Seymore Butts'},
         {key:'2', text:'Gene Vagine', value:'Gene Vagine'},
         {key:'3', text:'Rick Sanchez', value:'Rick Sanchez'}
     ]
-    const request = state.requestLists.find(({id}) => {
-        return id === Number(ownProps.match.params.id)
-    })
+
     return{
-        interviewers,
-        approvers,
+        interviewerOptions,
+        approverOptions,
         request: state.request,
-        defaultRequest: request
+        currentUser
     }
     
 }
@@ -28,7 +29,20 @@ function mapStateToProps(state,ownProps){
 function mapDispatchToProps(dispatch) {
     return {
         addResourceRequest: () => {
-            dispatch(addNewResourceRequest())
+            dispatch(addNewResource())
+        },
+        initializeRequest: (requestedBy) => {
+            dispatch(initializeRequest(requestedBy))
+        },
+        createNewRequest: (newRequestObject) => {
+            return() => {
+                console.log(newRequestObject)
+                // const [approvers] = newRequestObject
+                // dispatch(createNewRequest((newRequestObject)))
+            }
+        },
+        handleChange: (event, {name, value}) => {
+            dispatch(handleChange(name, value))
         }
     }
 }

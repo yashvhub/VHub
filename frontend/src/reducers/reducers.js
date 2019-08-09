@@ -12,5 +12,5 @@ export default combineReducers({
     requestLists,
     resources,
     request,
-    requestEnvelope,
+    requestEnvelope
 })

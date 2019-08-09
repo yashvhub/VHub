@@ -1,51 +1,66 @@
 import React, {useState} from 'react';
-import {Form, Grid, Input, Label} from 'semantic-ui-react';
+import {Form, Grid, Input, Label, Divider} from 'semantic-ui-react';
 
- class ResourceForm extends React.Component{
-    constructor(props){
-        super(props)
-        this.state={
-            newSkill:'',
-        }
+function ResourceForm (props){
+    const [newSkill, setNewSkill] = useState('');
+    const [quantityError, setQuantityError] = useState(false);
+    const [compensationError, setCompensationError] = useState(false);
+    const [experienceError, setExperienceError] = useState(false);
+    const [skillsError, setSkillsError] = useState(false);
+    const {compensation, experience, index, number, skills} = props.requestedResource
+    const handleInput = (e) => {
+        setNewSkill(e.target.value)
     }
-    componentDidUpdate(nextProps, nextState){
-        console.log(nextProps)
+    const addSkillToResource = () => {
+        props.addNewSkill(newSkill, index)
     }
-    handleInput = (e) => {
-        this.setState({newSkill: e.target.value})
-    }
-    addSkillToResource = () => {
-        this.props.addNewSkill(this.state.newSkill, this.props.index)
-    }
-    render(){
-        console.log('here state', this.state)
-        console.log('here props', this.props)
-        const skills = this.props.skills.map((skill)=>{
-            return <Label key={skill} color='blue' tag>{skill}</Label>
-        })
-        return(
-            <>
-                <Form.Group widths='equal'>
-                    <Form.Input fluid label='Number of Resources' placeholder='quantity'/>
-                </Form.Group>
-                <Form.Group widths='equal'>
-                    <Form.Input fluid label='$/hr' placeholder='$'/>
-                    <Form.Input fluid label='Experience In Years Required' placeholder='years'/>
-                </Form.Group>
-                    <Input
-                    icon='tags'
-                    iconPosition='left'
-                    label={{tag: true, content: 'Add Skill', onClick:this.addSkillToResource}}
-                    labelPosition='right'
-                    placeholder='Add Skills'
-                    onChange={this.handleInput}
-                    />
-                <Form.Group>
-                    {skills}
-                </Form.Group>
-            </>
-        )
-    }
+    const skillsLabels = skills.map((skill)=>{
+        return <Label key={skill} color='blue' tag>{skill}</Label>
+    })
+    return(
+        <>
+            <h3>Resource {index+1}</h3>
+            <Form.Group widths='equal'>
+                <Form.Input 
+                fluid 
+                label='Number of Resources' 
+                placeholder='quantity' 
+                onBlur={number === '' ? () => {setQuantityError(true)}:null} 
+                error={quantityError}
+                />
+            </Form.Group>
+            <Form.Group widths='equal'>
+                <Form.Input 
+                fluid 
+                label='$/hr' 
+                placeholder='$' 
+                onBlur={compensation === '' ? () => {setCompensationError(true)}:null} 
+                error={compensationError}
+                />
+                <Form.Input 
+                fluid 
+                label='Experience In Years Required' 
+                placeholder='years' 
+                onBlur={experience === '' ? () => {setExperienceError(true)}:null} 
+                error={experienceError}
+                />
+            </Form.Group>
+                <Input
+                icon='tags'
+                iconPosition='left'
+                label={{tag: true, content: 'Add Skill', onClick: addSkillToResource}}
+                labelPosition='right'
+                placeholder='Add Skills'
+                onChange={handleInput}
+                onBlur={skills.length === 0 ? () => {setSkillsError(true)}:null} 
+                error={skillsError}
+                />
+            <Form.Group>
+                {skillsLabels}
+            </Form.Group>
+            <Divider/>
+        </>
+    )
 }
 
 export default ResourceForm;

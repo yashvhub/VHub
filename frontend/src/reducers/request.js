@@ -1,9 +1,12 @@
-import {ADD_NEW_RESOURCE_REQUEST, ADD_NEW_SKILL} from "../action-creators/actions";
+import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST} from "../action-creators/actions";
+
 
 function blankState(){
     return {
-        interviewer: '',
-        approver: '',
+        requestedBy: '',
+        requestDate: '',
+        interviewers: [],
+        approvers: [],
         jobId: '',
         businessCase: '',
         clientName: '',
@@ -15,12 +18,25 @@ function blankState(){
     }
 }
 
+function initializeRequest(state, action){
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const yyyy = today.getFullYear();
+    const requestDate = mm+'/'+dd+'/'+yyyy;
+    return {
+        ...state,
+        requestedBy: action.currentUser,
+        requestDate,
+    }
+}
+
 function addNewResource(state) {
     const resourceRequestDefaultObject = {
         index: state.requestedResources.length,
-        number: 0,
+        number: '',
         compensation: '',
-        experience: 0,
+        experience: '',
         skills: []
     }
     state.requestedResources.push(resourceRequestDefaultObject)
@@ -30,7 +46,7 @@ function addNewResource(state) {
 }
 
 function addNewSkill(state, action) {
-    console.log(state)
+    console.log(action)
     return{
         ...state,
             requestedResources:[
@@ -44,10 +60,20 @@ function addNewSkill(state, action) {
         }
 }
 
+function requestHandleChange(state, action){
+    console.log(action)
+    return{
+        ...state,
+        [action.key]: action.value
+    }
+}
+
 export default function (state = blankState(), action) {
     const actionHandlers = {
-        [ADD_NEW_RESOURCE_REQUEST]: addNewResource,
-        [ADD_NEW_SKILL]:addNewSkill
+        [ADD_NEW_RESOURCE]: addNewResource,
+        [ADD_NEW_RESOURCE_SKILL]:addNewSkill,
+        [REQUEST_HANDLECHANGE]: requestHandleChange,
+        [INTIALIZE_REQUEST]: initializeRequest
     };
 
     const reducer = actionHandlers[action.type];

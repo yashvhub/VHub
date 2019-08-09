@@ -7,7 +7,7 @@ import RequestList from "../request-list/request-list-connector";
 import Proposals from "../proposals/proposals-connector";
 import Request from '../request/request-connector';
 import ConfirmPage from '../confirm/confirm-connector';
-import ApproveRequest from '../approve-request/approve-request-connector'
+import ApproveRequest from '../approve-request/approve-request-connector';
 
 function Routing(){
     return (

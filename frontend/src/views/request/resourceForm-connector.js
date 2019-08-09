@@ -3,14 +3,9 @@ import ResourceForm from './resourceForm';
 import {addNewSkill} from '../../action-creators/request';
 
 function mapStateToProps(state, ownProps){
-    let {compensation, experience, index, number} = state.request.requestedResources[ownProps.id]
-    let skills = state.request.requestedResources[ownProps.id].skills
+    console.log('redux state', state)
     return{
-        compensation,
-        experience,
-        index,
-        number,
-        skills
+        requestedResource: state.request.requestedResources[ownProps.id]
     }
     
 }
