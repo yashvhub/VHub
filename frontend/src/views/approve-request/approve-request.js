@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Message, Grid, Button, FormGroup, Loader, Divider } from 'semantic-ui-react';
 import ApproveResourceForm from './approve-resourceForm-connector';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import Comments from '../common/comments.js';
 
 class ApproveRequestForm extends React.Component {
@@ -49,7 +49,7 @@ class ApproveRequestForm extends React.Component {
                             <Form.Input fluid label='Job Posting ID' placeholder='ID' value={this.props.requestEnvelope.jobPosting} readOnly />
                         </Form.Group>
                         <Form.Group widths='equal'>
-                            <Form.Select fluid label='Interviewer' options={this.props.requestEnvelope.approvers.map(({ id, email }, index) => ({}))} placeholder='Select' value={`${this.props.requestEnvelope.interviewer.id}`}/>
+                            <Form.Select fluid label='Interviewer' options={this.props.requestEnvelope.approvers.map(({ id, email }, index) => ({}))} placeholder='Select' value={'{`${this.props.requestEnvelope.interviewer.id}`}'}/>
                             <Form.Select fluid label='Approvers' options={this.props.requestEnvelope.approvers.map(({ id, email }, index) => ({key: index, text: email, value: id}))} placeholder='Select'/>
                         </Form.Group>
                         <Form.TextArea label='Business Case' placeholder='Describe Business Case' value={this.props.requestEnvelope.businessCase} rows='6' readOnly />
@@ -65,6 +65,9 @@ class ApproveRequestForm extends React.Component {
 
                         <Divider section/>
                         {resources}
+                        <Form.Group>
+                        <Button icon="paperclip" label="Proposals" as={Link} to={`/request/${this.props.requestEnvelope.id}/resource-request/${1}/proposals`}/>
+                        </Form.Group>
                         <Comments commentBlock={this.props.requestEnvelope.requestComments}/>
                         {/* <Form.TextArea label='Comments' placeholder='Comments...' value={this.props.requestEnvelope.requestComments[0].comment} rows='6' /> */}
 

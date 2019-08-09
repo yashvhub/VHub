@@ -43,8 +43,8 @@ export function approveRequestEnvelope(requestEnvelope){
         try {
             dispatch(requestRequestEnvelope());
             // requestEnvelope.requestStatus = `${RequestEnvelopes.getPath()}/request-statuses/2`
-            console.log("we're in the action: ", requestEnvelope);
-        const [response, status] = await RequestEnvelopes.patch(requestEnvelope, undefined, {});
+            // console.log("we're in the action: ", requestEnvelope);
+        const [response, status] = await RequestEnvelopes.approvePatch(requestEnvelope, requestEnvelope.id , {});
         if(response && !getState().requestEnvelope.didInvalidate){
             console.log("response data: ", response.data);
             // dispatch(receiveRequestEnvelope(response.data));
