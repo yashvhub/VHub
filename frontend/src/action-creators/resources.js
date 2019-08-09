@@ -21,19 +21,19 @@ export function invalidateResources() {
     }
 }
 
-export function fetchResources({name, skill}) {
+export function fetchResources({name, skill, vendor}) {
     return async function(dispatch, getState) {
         try {
             dispatch(requestResources())
             let response, status;
             if (name && skill) {
-                [response, status] = await Resources.getByNameAndSkill(name, skill);
+                [response, status] = await Resources.getByNameAndSkillAndVendor(name, skill, vendor);
             } else if (name) {
-                [response, status] = await Resources.getByName(name);
+                [response, status] = await Resources.getByNameAndVendor(name, vendor);
             } else if (skill) {
-                [response, status] = await Resources.getBySkill(skill);
+                [response, status] = await Resources.getBySkillAndVendor(skill, vendor);
             } else {
-                [response, status] = await Resources.get();
+                [response, status] = await Resources.getByVendor(vendor);
             }
             if (response && !getState().resources.didInvalidate) {
                 dispatch(receiveResources(response));

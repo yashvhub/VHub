@@ -13,11 +13,13 @@ import com.yash.vhub.domain.ResourceSummary;
 @RepositoryRestResource(excerptProjection=ResourceSummary.class)
 public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
-	@Query("SELECT r FROM Resource r INNER JOIN r.skills s WHERE s.skill = :skill AND r.name LIKE %:name%")
-	Set<Resource> findBySkillAndName(@Param("skill") String skill, @Param("name") String name);
+	@Query("SELECT r FROM Resource r INNER JOIN r.skills s WHERE s.skill = :skill AND r.name LIKE %:name% AND r.vendor = :vendor")
+	Set<Resource> findBySkillAndNameAndVendor(@Param("skill") String skill, @Param("name") String name, @Param("vendor") String vendor);
 	
-	@Query("SELECT r FROM Resource r INNER JOIN r.skills s WHERE s.skill = :skill")
-	Set<Resource> findBySkill(@Param(value = "skill") String skill);
+	@Query("SELECT r FROM Resource r INNER JOIN r.skills s WHERE s.skill = :skill AND r.vendor = :vendor")
+	Set<Resource> findBySkillAndVendor(@Param("skill") String skill, @Param("vendor") String vendor);
 	
-	Set<Resource> findByNameContaining(String name);
+	Set<Resource> findByNameContainingAndVendor(String name, String vendor);
+	
+	Set<Resource> findByVendor(String vendor);
 }
