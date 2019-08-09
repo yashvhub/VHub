@@ -17,8 +17,6 @@ class ConfirmTable extends React.Component{
             ))}
         })
 
-        console.log(this.props.resources)
-
         return(
             <Table celled structured>
                 <Table.Header>
@@ -26,6 +24,7 @@ class ConfirmTable extends React.Component{
                         <Table.HeaderCell rowSpan='2'>Approve?</Table.HeaderCell>
                         <Table.HeaderCell rowSpan='2'>Name</Table.HeaderCell>
                         <Table.HeaderCell rowSpan='2'>Resume</Table.HeaderCell>
+                        <Table.HeaderCell rowSpan='2'>Years of Exp</Table.HeaderCell>
                         <Table.HeaderCell colSpan={skillArray.length}>Languages</Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
@@ -39,10 +38,11 @@ class ConfirmTable extends React.Component{
                     {this.props.resources.map(resource => (
                         <Table.Row>
                             <Table.Cell collapsing>
-                            <Checkbox toggle />
+                            <Checkbox checkbox />
                             </Table.Cell>
                             <Table.Cell>{resource.name}</Table.Cell>
                             <Table.Cell><Link to='#'>{resource.resumeLink}</Link></Table.Cell>
+                            <Table.Cell>{resource.yearsOfExperience}</Table.Cell>
                             {skillArray.map(skill => ( 
                                     <Table.Cell textAlign='center'>
                                         {resource.skills.filter(s => s.skill === skill).length ? 
