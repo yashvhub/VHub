@@ -13,5 +13,6 @@ public interface ResourceRequestSummary {
 	int getCount();
 	double getHourlyRate();
 	int getYearsOfExperience();
+	Set<ProposalSummary> getProposals();
 	Set<Skill> getSkills();
 }

@@ -7,11 +7,13 @@ import RequestList from "../request-list/request-list-connector";
 
 
 function Home({user, isPending}){
-    if(!user && !isPending) {
+
+    if(!sessionStorage.getItem('email') && !sessionStorage.getItem('token') && !isPending) {
         return <Redirect to='/'/>
-    } else if (!user) {
+    } else if (!sessionStorage.getItem('email') || !sessionStorage.getItem('token')) {
         return <Loader active/>
     }
+
     return (
         <Grid columns={2} container>
             <Grid.Column width={4}>

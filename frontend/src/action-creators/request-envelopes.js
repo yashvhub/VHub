@@ -1,5 +1,5 @@
 import RequestEnvelopes from "../API/request-envelopes";
-import { REQUEST_REQUEST_ENVELOPE, RECEIVE_REQUEST_ENVELOPE, INVALIDATE_REQUEST_ENVELOPE } from "./actions";
+import { REQUEST_REQUEST_ENVELOPE, RECEIVE_REQUEST_ENVELOPE, INVALIDATE_REQUEST_ENVELOPE} from "./actions";
 
 export function requestRequestEnvelope() {
     return {
@@ -36,4 +36,24 @@ export function fetchRequestEnvelope(id, projection="FullRequestEnvelope") {
             console.error(e);
         }
     }
+}
+
+export function approveRequestEnvelope(requestEnvelope){
+    return async function(dispatch,getState){
+        try {
+            dispatch(requestRequestEnvelope());
+            // requestEnvelope.requestStatus = `${RequestEnvelopes.getPath()}/request-statuses/2`
+            // console.log("we're in the action: ", requestEnvelope);
+        const [response, status] = await RequestEnvelopes.approvePatch(requestEnvelope, requestEnvelope.id , {});
+        if(response && !getState().requestEnvelope.didInvalidate){
+            console.log("response data: ", response.data);
+            // dispatch(receiveRequestEnvelope(response.data));
+        } else{
+            dispatch(invalidateRequestEnvelope())
+        }
+    } catch(e) {
+        dispatch(invalidateRequestEnvelope());
+        console.error(e);
+    }
+}
 }

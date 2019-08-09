@@ -8,7 +8,7 @@ function mapStateToProps(state, ownProps){
         hourlyRate,
         yearsOfExperience,
         count,
-        skills: skills.map(({skill}) => skill)
+        skills: skills.map(({skill}) => skill),
     }
     
 }

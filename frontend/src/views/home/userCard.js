@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Image} from 'semantic-ui-react';
+import {Card} from 'semantic-ui-react';
 
 class UserCard extends React.Component{
     constructor(props){
@@ -10,9 +10,9 @@ class UserCard extends React.Component{
         return(
             <Card
             image=''
-            header={`${this.props.user.firstName} ${this.props.user.lastName}`}
-            meta={this.props.user.title}
-            description={this.props.user.company}
+            header={`${sessionStorage.getItem('firstName')} ${sessionStorage.getItem('lastName')}`}
+            meta={sessionStorage.getItem('title')}
+            description={sessionStorage.getItem('company')}
           />
         )
     }
