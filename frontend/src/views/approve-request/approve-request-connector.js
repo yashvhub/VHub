@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import approveRequest from './approve-request';
-import {fetchRequestEnvelope} from '../../action-creators/request-envelopes';
+import {fetchRequestEnvelope,approveRequestEnvelope} from '../../action-creators/request-envelopes';
 
 function mapStateToProps({requestEnvelope},ownProps){
     
@@ -11,7 +11,8 @@ function mapStateToProps({requestEnvelope},ownProps){
 }
 
 const mapDispatchToProps = {
-    fetchRequestEnvelope
+    fetchRequestEnvelope,
+    approveRequestEnvelope
 }
 
 

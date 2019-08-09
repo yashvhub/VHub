@@ -24,6 +24,7 @@ public interface RequestEnvelopeFull {
 	String getManager();
 	ProposalType getProposalType();
 	Set<ResourceRequestSummary> getResourceRequests();
+	Set<RequestComment> getRequestComments();
 	Set<ResourceSummary> getSelectedResources();
 	Set<User> getApprovers();
 	

@@ -76,6 +76,10 @@ public class RequestEnvelope {
 	@JoinColumn(name="request_envelope_id")
 	Set<ResourceRequest> resourceRequests = new HashSet<>();
 	
+	@OneToMany
+	@JoinColumn(name="request_envelope_id")
+	Set<RequestComment> requestComments = new HashSet<>();
+	
 	@ManyToMany
 	@JoinTable(
 			name="request_envelope_resources_jt",

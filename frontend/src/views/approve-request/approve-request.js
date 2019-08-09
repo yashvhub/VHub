@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { Form, Message, Grid, Button, FormGroup, Loader, Divider } from 'semantic-ui-react';
 import ApproveResourceForm from './approve-resourceForm-connector';
 import { Redirect } from 'react-router-dom';
+import Comments from '../common/comments.js';
 
 class ApproveRequestForm extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            requestEnvelope: this.props.requestEnvelope,
             shouldRedirect: false,
             formSuccess: false,
         }
@@ -22,7 +22,9 @@ class ApproveRequestForm extends React.Component {
 
     render() {
 
-        const approve = () => {
+        const approve = async () => {
+            await this.props.approveRequestEnvelope(this.props.requestEnvelope);
+            console.log("this is undefined in the action: ", this.props.requestEnvelope);
             this.setState({ formSuccess: true });
         }
 
@@ -63,7 +65,8 @@ class ApproveRequestForm extends React.Component {
 
                         <Divider section/>
                         {resources}
-                        <Form.TextArea label='Comments' placeholder='Comments...' rows='6' />
+                        <Comments commentBlock={this.props.requestEnvelope.requestComments}/>
+                        {/* <Form.TextArea label='Comments' placeholder='Comments...' value={this.props.requestEnvelope.requestComments[0].comment} rows='6' /> */}
 
                         <Message success header='Form Completed' content="Request Approved Successfully" />
 

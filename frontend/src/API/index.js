@@ -87,6 +87,10 @@ export class Repository {
             console.error(e);
         }
     }
+
+    async getPath() {
+        return `${DEFAULT_CONFIG.baseURL}/${this.url}`;
+    }
 }
 
 export default API;
