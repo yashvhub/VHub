@@ -21,11 +21,11 @@ export function invalidateRequestEnvelope() {
 }
 
 
-export function fetchRequestEnvelope(id) {
+export function fetchRequestEnvelope(id, projection="FullRequestEnvelope") {
     return async function(dispatch,getState) {
         try {
             dispatch(requestRequestEnvelope())
-            const [response, status] = await RequestEnvelopes.get(id, {params: {projection:"FullRequestEnvelope"}});
+            const [response, status] = await RequestEnvelopes.get(id, {params: {projection}});
             if(response && !getState().requestEnvelope.didInvalidate){
                 dispatch(receiveRequestEnvelope(response.data));
             } else {

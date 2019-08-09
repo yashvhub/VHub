@@ -1,33 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import { Grid, Segment, Form, Button, Table, Loader, Header } from 'semantic-ui-react';
+import { Grid, Segment, Form, Button, Table, Loader, Header, Container } from 'semantic-ui-react';
 import ProposalsTable from './proposals-table';
+import { Redirect } from 'react-router-dom';
 
-const COMMENTS = [
-    {
-        id: 1,
-        proposalId: 1,
-        author: {
-            id: 1,
-            email: "caleb.reiter@yash.com",
-            firstName: "Caleb",
-            lastName: "Reiter",
-            title: "Software Engineer",
-            company: "YASH",
-        },
-        comment: "This is an example Comment.",
-        createdAt: new Date(),
-        lastUpdated: null
-    }
-]
+function Proposals({match: {params}, fetchResources, fetchRequestEnvelope, requestEnvelope, resources, isFetching, vendor}) {
+    
+    const [shouldRedirect, setShouldRedirect] = useState(false);
+    useEffect(()=>{
+        fetchRequestEnvelope(params.id, "ProposalRequestEnvelope");
+        setShouldRedirect(true);
+    }, [fetchRequestEnvelope, params.id, setShouldRedirect])
 
-function Proposals({fetchResources, resources, isFetching, vendor}) {
-
+    
     const [searchParams, setSearchParams] = useState({
         name: '',
         skill: ''
     })
-
     const [proposals, setProposals] = useState([]);
+    if(!requestEnvelope) {
+        return <Loader active/>
+    }
 
     const addProposal = (proposal) => (e, data) => {
         if (!proposals.find(p => p.id === proposal.id)) {
@@ -63,11 +55,12 @@ function Proposals({fetchResources, resources, isFetching, vendor}) {
     </Table.Row>
 
     const tableColumns = ['Name', 'Skills', 'Vendor', 'E-Mail', 'Resume Link', '$/hr', ''];
-    const vendorResources = resources.filter(f => f.vendor === vendor);
-    const openMarketResources = resources.filter(f => f.vendor !== vendor);
+    const typedResources = resources.filter(f => requestEnvelope.proposalType.toLowerCase() === 'internal' ? f.vendor === vendor : f.vendor !== vendor);
+    // const vendorResources = resources.filter(f => f.vendor === vendor);
+    // const openMarketResources = resources.filter(f => f.vendor !== vendor);
 
-    return <Grid textAlign='center' style={{height: '100vh'}} verticalAlign='top'>
-        <Grid.Column style={{ maxWidth: 900 }}>
+    return <Grid columns='16' textAlign='center' verticalAlign='top'>
+        <Grid.Column width='10'>
             <Grid columns={2}>
                 <Grid.Row>
                 <Grid.Column>
@@ -91,42 +84,23 @@ function Proposals({fetchResources, resources, isFetching, vendor}) {
                   />
                   </Grid.Column>
                   <Grid.Column verticalAlign='bottom'>
-                <Button disabled={isFetching} onClick={onSearchClick}>{isFetching ? <Loader active inline='centered' size='tiny'/> : 'Search'}</Button>
+                <Button disabled={isFetching.resources} onClick={onSearchClick}>{isFetching.resources ? <Loader active inline='centered' size='tiny'/> : 'Search'}</Button>
                   </Grid.Column>
                   </Grid.Row>
                   </Grid>
                 <ProposalsTable
                 label="Search Results"
                 headers={tableColumns}
-                    dataSize={vendorResources.length}
-                    emptyMessage={isFetching ? "Loading" : "No resources found."}
+                    dataSize={typedResources.length}
+                    emptyMessage={isFetching.resources ? "Loading" : "No resources found."}
                     displayNumberOfResults
                 >{
-                    isFetching ? <Table.Row>
+                    isFetching.resources ? <Table.Row>
                         <Table.Cell colSpan={tableColumns.length}>
                         <Loader active inline='centered'/>
                         </Table.Cell>
                         </Table.Row> :
-                    vendorResources.map(resourceMapper({
-                        disabled: (resource) => proposals.find(p => p.id === resource.id) !== undefined,
-                        icon: 'add',
-                        title: 'Add to proposal.',
-                        onClick: (resource) => addProposal(resource)
-                    }))
-                }</ProposalsTable>
-                <ProposalsTable
-                    label='Add From Open Market'
-                    headers={tableColumns}
-                    dataSize={openMarketResources.length}
-                    emptyMessage={isFetching ? 'Loading' : 'No resources found.'}
-                    displayNumberOfResults
-                >{
-                    isFetching ? <Table.Row>
-                        <Table.Cell colSpan={tableColumns.length}>
-                        <Loader active inline='centered'/>
-                        </Table.Cell>
-                        </Table.Row> :
-                    openMarketResources.map(resourceMapper({
+                    typedResources.map(resourceMapper({
                         disabled: (resource) => proposals.find(p => p.id === resource.id) !== undefined,
                         icon: 'add',
                         title: 'Add to proposal.',
@@ -145,6 +119,11 @@ function Proposals({fetchResources, resources, isFetching, vendor}) {
                         onClick: (resource) => removeProposal(resource)
                     }))
                 }</ProposalsTable>
+                <Form>
+                    <Form.Group>
+                        <Button icon='save' label='Save'/>
+                    </Form.Group>
+                </Form>
         </Grid.Column>
     </Grid>
 }
