@@ -12,6 +12,7 @@ function LoginPage({doLogin, user, isPending, error}){
         sessionStorage.setItem('lastName', user.lastName);
         sessionStorage.setItem('title', user.title);
         sessionStorage.setItem('company', user.company);
+        console.log(sessionStorage)
         return <Redirect to='/home'/>
     }
     const status = error ? ('statusText' in error) ? `${error.status}: ${error.statusText}` : error.status : undefined;

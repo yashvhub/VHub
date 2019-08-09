@@ -13,6 +13,7 @@ function Home({user, isPending}){
     } else if (!sessionStorage.getItem('email') || !sessionStorage.getItem('token')) {
         return <Loader active/>
     }
+
     return (
         <Grid columns={2} container>
             <Grid.Column width={4}>
