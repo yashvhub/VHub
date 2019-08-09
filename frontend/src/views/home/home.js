@@ -1,10 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import UserCard from './userCard';
+import RequestList from "../request-list/request-list-connector";
 import {Grid, Loader, Button} from 'semantic-ui-react';
 import {Redirect, Link} from 'react-router-dom';
-import RequestList from "../request-list/request-list-connector";
-
 
 function Home({user, isPending}){
 

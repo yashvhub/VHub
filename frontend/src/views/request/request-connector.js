@@ -4,8 +4,7 @@ import {addNewResource, handleChange, createNewRequest, initializeRequest} from 
 
 function mapStateToProps(state){
     console.log(state)
-    // const currentUser = state.login.user.firstName +' '+ state.login.user.lastName;
-    const currentUser = 'Asshole'
+    const currentUser = state.login.user.firstName +' '+ state.login.user.lastName;
     const interviewerOptions = [
         {key:'1', text:'Seymore Butts', value:'Seymore Butts'},
         {key:'2', text:'Gene Vagine', value:'Gene Vagine'},
@@ -36,9 +35,8 @@ function mapDispatchToProps(dispatch) {
         },
         createNewRequest: (newRequestObject) => {
             return() => {
-                console.log(newRequestObject)
-                // const [approvers] = newRequestObject
-                // dispatch(createNewRequest((newRequestObject)))
+                const [approvers] = newRequestObject
+                dispatch(createNewRequest((newRequestObject)))
             }
         },
         handleChange: (event, {name, value}) => {
