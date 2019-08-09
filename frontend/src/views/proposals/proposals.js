@@ -2,33 +2,61 @@ import React, {useEffect, useState} from 'react';
 import { Grid, Segment, Form, Button, Table, Loader, Header, Container } from 'semantic-ui-react';
 import ProposalsTable from './proposals-table';
 import { Redirect } from 'react-router-dom';
+import { postProposal } from '../../action-creators/proposal';
 
-function Proposals({match: {params}, fetchResources, fetchRequestEnvelope, requestEnvelope, resources, isFetching, vendor}) {
-    
-    const [shouldRedirect, setShouldRedirect] = useState(false);
-    useEffect(()=>{
-        fetchRequestEnvelope(params.id, "ProposalRequestEnvelope");
-        setShouldRedirect(true);
-    }, [fetchRequestEnvelope, params.id, setShouldRedirect])
+function Proposals(
+    {match: {params}, fetchResources, fetchRequestEnvelope, fetchProposal, postProposal,
+    proposal, requestEnvelope, resources, isFetching, hasError, vendor}
+    ) {
+    // Component should redirect after submit
+    const [fireRedirect, setFireRedirect] = useState(false);
+    // Component should redirect if entity does not exist with given ID.
+    const [requestEnvelopeShouldRedirect, setRequestEnvelopeShouldRedirect] = useState(false);
+    const [proposalShouldRedirect, setProposalShouldRedirect] = useState(false);
 
-    
+    const [proposals, setProposals] = useState({resourceRequestId: params.resourceRequestId, resources: []});
     const [searchParams, setSearchParams] = useState({
         name: '',
         skill: ''
     })
-    const [proposals, setProposals] = useState([]);
-    if(!requestEnvelope) {
+    useEffect(()=>{
+        fetchRequestEnvelope(params.id, "ProposalRequestEnvelope");
+        setRequestEnvelopeShouldRedirect(true);
+    }, [fetchRequestEnvelope, params.id])
+    useEffect(()=>{
+        if(params.proposalId) {
+            setProposalShouldRedirect(true);
+            fetchProposal(params.proposalId);
+        }
+    }, [fetchProposal, params.proposalId]);
+    // Set default proposal into state after fetch
+    useEffect(()=>{
+        if(proposal) {
+            setProposals(proposal)
+        }
+    }, [proposal, setProposals])
+    
+    if(!isFetching.requestEnvelope && !requestEnvelope && requestEnvelopeShouldRedirect) {
+        return <Redirect to='/home'/>
+    }
+    if(!isFetching.proposal && !proposal && params.proposalId && proposalShouldRedirect) {
+        return <Redirect to={`/request/${params.id}/approve`}/>
+    }
+    if(fireRedirect) {
+        return <Redirect to={`/request/${params.id}/approve`}/>
+    }
+    if (isFetching.requestEnvelope || isFetching.proposal){
         return <Loader active/>
     }
 
     const addProposal = (proposal) => (e, data) => {
-        if (!proposals.find(p => p.id === proposal.id)) {
-            setProposals([...proposals, proposal])
+        if (!proposals.resources.find(p => p.id === proposal.id)) {
+            setProposals({...proposals, resources: [...proposals.resources, proposal]})
         }
     }
 
     const removeProposal = (proposal) => () => {
-        setProposals(proposals.filter(p => p.id !== proposal.id));
+        setProposals({...proposals, resources: proposals.resources.filter(r => r.id !== proposal.id)});
     }
 
     const handleSearchChange = (e, {name, value}) => {
@@ -40,8 +68,25 @@ function Proposals({match: {params}, fetchResources, fetchRequestEnvelope, reque
     }
 
     const onSearchClick = (e) => {
-        fetchResources(searchParams);
+        fetchResources({...searchParams, vendor});
+    }
 
+    const onSubmit = (e) => {
+        e.preventDefault();
+        if(params.proposalId) {
+            const proposalBody = {
+                id: params.proposalId,
+                resourceRequestId: proposals.resourceRequestId,
+                resources: proposals.resources
+            }
+            if (proposal.resourceRequestId === proposals.resourceRequestId) {
+                delete proposalBody.resourceRequestId;
+            }
+            postProposal(proposalBody);
+        } else {
+            postProposal(proposals);
+        }
+        setFireRedirect(true);
     }
 
     const resourceMapper = (buttonProps) => (resource) => <Table.Row key={resource.id}>
@@ -55,10 +100,7 @@ function Proposals({match: {params}, fetchResources, fetchRequestEnvelope, reque
     </Table.Row>
 
     const tableColumns = ['Name', 'Skills', 'Vendor', 'E-Mail', 'Resume Link', '$/hr', ''];
-    const typedResources = resources.filter(f => requestEnvelope.proposalType.toLowerCase() === 'internal' ? f.vendor === vendor : f.vendor !== vendor);
-    // const vendorResources = resources.filter(f => f.vendor === vendor);
-    // const openMarketResources = resources.filter(f => f.vendor !== vendor);
-
+    
     return <Grid columns='16' textAlign='center' verticalAlign='top'>
         <Grid.Column width='10'>
             <Grid columns={2}>
@@ -84,14 +126,18 @@ function Proposals({match: {params}, fetchResources, fetchRequestEnvelope, reque
                   />
                   </Grid.Column>
                   <Grid.Column verticalAlign='bottom'>
-                <Button disabled={isFetching.resources} onClick={onSearchClick}>{isFetching.resources ? <Loader active inline='centered' size='tiny'/> : 'Search'}</Button>
+                    <Button disabled={isFetching.resources} onClick={onSearchClick}>
+                    {isFetching.resources ?
+                        <Loader active inline='centered' size='tiny'/>
+                        : 'Search'}
+                    </Button>
                   </Grid.Column>
                   </Grid.Row>
                   </Grid>
                 <ProposalsTable
                 label="Search Results"
                 headers={tableColumns}
-                    dataSize={typedResources.length}
+                    dataSize={resources.length}
                     emptyMessage={isFetching.resources ? "Loading" : "No resources found."}
                     displayNumberOfResults
                 >{
@@ -100,8 +146,8 @@ function Proposals({match: {params}, fetchResources, fetchRequestEnvelope, reque
                         <Loader active inline='centered'/>
                         </Table.Cell>
                         </Table.Row> :
-                    typedResources.map(resourceMapper({
-                        disabled: (resource) => proposals.find(p => p.id === resource.id) !== undefined,
+                    resources.map(resourceMapper({
+                        disabled: (resource) => proposals.resources.find(p => p.id === resource.id) !== undefined,
                         icon: 'add',
                         title: 'Add to proposal.',
                         onClick: (resource) => addProposal(resource)
@@ -110,10 +156,10 @@ function Proposals({match: {params}, fetchResources, fetchRequestEnvelope, reque
                 <ProposalsTable
                     label='Proposals'
                     headers={tableColumns}
-                    dataSize={proposals.length}
+                    dataSize={proposals.resources.length}
                     emptyMessage='Add a proposal from above.'
                 >{
-                    proposals.map(resourceMapper({
+                    proposals.resources.map(resourceMapper({
                         icon: 'minus',
                         title: 'Remove from proposal.',
                         onClick: (resource) => removeProposal(resource)
@@ -121,7 +167,7 @@ function Proposals({match: {params}, fetchResources, fetchRequestEnvelope, reque
                 }</ProposalsTable>
                 <Form>
                     <Form.Group>
-                        <Button icon='save' label='Save'/>
+                        <Button icon='save' label='Save' onClick={onSubmit}/>
                     </Form.Group>
                 </Form>
         </Grid.Column>

@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -37,6 +38,10 @@ public class ResourceRequest {
 	@Column(name="years_of_experience")
 	private int yearsOfExperience;
 
+	@OneToMany
+	@JoinColumn(name="resource_request_id")
+	private Set<Proposal> proposals;
+	
 	@ManyToMany
 	@JoinTable(
 			name="resource_request_skills_jt",

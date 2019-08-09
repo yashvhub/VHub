@@ -38,6 +38,10 @@ export class Repository {
         return id;
     }
 
+    getPath() {
+        return `${DEFAULT_CONFIG.baseURL}/${this.url}`
+    }
+
     async post(data, config={}) {
         try {
             if(Array.isArray(data)) {

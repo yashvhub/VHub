@@ -1,13 +1,14 @@
 import API, {Repository} from '.';
 
 class ResourceRepository extends Repository {
-    async getByName(name, config={}) {
+    async getByNameAndVendor(name, vendor, config={}) {
         try {
-            const response = await API.get(`${this.url}/search/findByNameContaining`, {
+            const response = await API.get(`${this.url}/search/findByNameContainingAndVendor`, {
                 ...config,
                 params: {
                     ...config.params,
-                    name
+                    name,
+                    vendor
                 }
             });
             return this.getData(response);
@@ -15,28 +16,30 @@ class ResourceRepository extends Repository {
             console.error(e);
         }
     }
-    async getBySkill(skill, config={}) {
+    async getBySkillAndVendor(skill, vendor, config={}) {
         try {
-            const response = await API.get(`${this.url}/search/findBySkill`, {
-                ...config,
-                params: {
-                    ...config.params,
-                    skill
-                }
-            });
-            return this.getData(response);
-        } catch (e) {
-            console.error(e);
-        }
-    }
-    async getByNameAndSkill(name, skill, config={}) {
-        try {
-            const response = await API.get(`${this.url}/search/findBySkillAndName`, {
+            const response = await API.get(`${this.url}/search/findBySkillAndVendor`, {
                 ...config,
                 params: {
                     ...config.params,
                     skill,
-                    name
+                    vendor
+                }
+            });
+            return this.getData(response);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    async getByNameAndSkillAndVendor(name, skill, vendor, config={}) {
+        try {
+            const response = await API.get(`${this.url}/search/findBySkillAndNameAndVendor`, {
+                ...config,
+                params: {
+                    ...config.params,
+                    skill,
+                    name,
+                    vendor
                 }
             });
             return this.getData(response);
