@@ -2,21 +2,21 @@ import API, {Repository} from '.';
 import Resources from './resources';
 
 class ProposalsRepository extends Repository {
+
     async post(data, config={}) {
         try {
             const proposal = await API.post(`${this.url}`, {
                 resourceRequestId: data.resourceRequestId
             }, config)
-            const resourcePosts = data.resources.map(resource => 
-                API.post(`${this.url}/${proposal.data.id}/resources`,
-                `${Resources.getPath()}/${resource.id}`,
+            const uriList = data.resources.map(resource =>
+            `${Resources.getPath()}/${resource.id}`)
+            await API.post(`${this.url}/${proposal.data.id}/resources`,
+                uriList.join('\n'),
                 {
                     headers: {
                         'Content-Type': 'text/uri-list'
                     }
-                })
-                );
-            await Promise.all(resourcePosts);
+                });
             return this.getData(proposal);
         } catch (e) {
             console.error(e);

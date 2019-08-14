@@ -39,6 +39,8 @@ export class Repository {
     }
 
     getPath() {
+        console.log('Repository::getPath',DEFAULT_CONFIG.baseURL);
+        console.log('Repository::getPath',this.url);
         return `${DEFAULT_CONFIG.baseURL}/${this.url}`
     }
 
@@ -90,10 +92,6 @@ export class Repository {
         } catch (e) {
             console.error(e);
         }
-    }
-
-    async getPath() {
-        return `${DEFAULT_CONFIG.baseURL}/${this.url}`;
     }
 }
 

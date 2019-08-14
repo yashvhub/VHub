@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Form, Message, Grid, Button, FormGroup, Loader, Divider } from 'semantic-ui-react';
 import ApproveResourceForm from './approve-resourceForm-connector';
 import { Redirect, Link } from 'react-router-dom';
@@ -18,23 +17,25 @@ class ApproveRequestForm extends React.Component {
     async componentWillMount() {
         await this.props.fetchRequestEnvelope(Number(this.props.match.params.id))
         this.setState({ shouldRedirect: true });
+        console.log("props in the component will mount" , this.props);
+
     }
 
     render() {
 
         const approve = async () => {
             await this.props.approveRequestEnvelope(this.props.requestEnvelope);
-            console.log("this is undefined in the action: ", this.props.requestEnvelope);
             this.setState({ formSuccess: true });
         }
 
+        console.log("we fetchin:" , this.props.isFetching);
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
             return <Redirect to='/request-list' />
-        } else if (!this.props.requestEnvelope) {
+        } else if (!this.props.requestEnvelope || this.props.isFetching) {
+            console.log("we are in the loader");
             return <Loader />
         }
 
-        console.log(this.props.requestEnvelope);
 
         const resources = this.props.requestEnvelope.resourceRequests.map((resource, index) => {
             return <ApproveResourceForm key={index} id={resource.id}/>
@@ -66,7 +67,7 @@ class ApproveRequestForm extends React.Component {
                         <Divider section/>
                         {resources}
                         <Form.Group>
-                        <Button icon="paperclip" label="Proposals" as={Link} to={`/request/${this.props.requestEnvelope.id}/resource-request/${1}/proposals`}/>
+                        <Button icon="paperclip" label="Proposals" as={Link} to={`/request/${this.props.requestEnvelope.id}/resource-request/${1}/proposals`} onClick={() => console.log("props immediately after clicking proposal button: ", this.props)}/>
                         </Form.Group>
                         <Comments commentBlock={this.props.requestEnvelope.requestComments}/>
                         {/* <Form.TextArea label='Comments' placeholder='Comments...' value={this.props.requestEnvelope.requestComments[0].comment} rows='6' /> */}

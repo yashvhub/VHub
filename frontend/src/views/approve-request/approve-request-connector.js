@@ -3,9 +3,9 @@ import approveRequest from './approve-request';
 import {fetchRequestEnvelope,approveRequestEnvelope} from '../../action-creators/request-envelopes';
 
 function mapStateToProps({requestEnvelope},ownProps){
-    
     return{
-        requestEnvelope: requestEnvelope.item
+        requestEnvelope: requestEnvelope.envelope,
+        isFetching: requestEnvelope.isFetching,
     }
     
 }

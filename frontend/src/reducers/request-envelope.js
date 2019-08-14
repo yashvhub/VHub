@@ -17,11 +17,10 @@ function requestRequestEnvelope(state, action) {
 }
 
 function receiveRequestEnvelope(state, action) {
-    console.log("received request envelope: " , action);
     return {
         ...state,
         isFetching: false,
-        item: action.requestEnvelope,
+        envelope: action.requestEnvelope,
         lastUpdated: Date.now()
     }
 }

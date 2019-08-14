@@ -32,7 +32,6 @@ import {Form, Grid, Input, Label, Divider} from 'semantic-ui-react';
                 <Form.Group>
                     {skills}
                 </Form.Group>
-                {/* <Button as={Link} to={`/request/${this.props.requestEnvelope.id}/resource-request/${}:resourceRequestId/proposals`}/> */}
                 <Divider section/>
             </>
         )

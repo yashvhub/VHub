@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {fetchResources} from '../../action-creators/resources';
-import {fetchRequestEnvelope} from '../../action-creators/request-envelopes';
+import {fetchProposalRequestEnvelope} from '../../action-creators/request-envelopes';
 import {fetchProposal, postProposal} from '../../action-creators/proposal';
 import Proposals from './proposals';
 
@@ -15,7 +15,7 @@ function mapStateToProps(state) {
         hasError: {
             proposal: state.proposal.hasError
         },
-        requestEnvelope: state.requestEnvelope.item,
+        proposalRequestEnvelope: state.requestEnvelope.envelope,
         proposal: state.proposal.item,
         vendor: 'YASH'
     }
@@ -23,7 +23,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
     fetchResources,
-    fetchRequestEnvelope,
+    fetchProposalRequestEnvelope,
     fetchProposal,
     postProposal,
 }

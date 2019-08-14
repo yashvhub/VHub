@@ -5,8 +5,8 @@ import { Redirect } from 'react-router-dom';
 import { postProposal } from '../../action-creators/proposal';
 
 function Proposals(
-    {match: {params}, fetchResources, fetchRequestEnvelope, fetchProposal, postProposal,
-    proposal, requestEnvelope, resources, isFetching, hasError, vendor}
+    {match: {params}, fetchResources, fetchProposalRequestEnvelope, fetchProposal, postProposal,
+    proposal, proposalRequestEnvelope, resources, isFetching, hasError, vendor}
     ) {
     // Component should redirect after submit
     const [fireRedirect, setFireRedirect] = useState(false);
@@ -20,9 +20,10 @@ function Proposals(
         skill: ''
     })
     useEffect(()=>{
-        fetchRequestEnvelope(params.id, "ProposalRequestEnvelope");
+        //THIS BAD BOI IS THE CAUSE OF THE BUG!!!
+        fetchProposalRequestEnvelope(params.id, "ProposalRequestEnvelope");
         setRequestEnvelopeShouldRedirect(true);
-    }, [fetchRequestEnvelope, params.id])
+    }, [fetchProposalRequestEnvelope, params.id])
     useEffect(()=>{
         if(params.proposalId) {
             setProposalShouldRedirect(true);
@@ -36,7 +37,8 @@ function Proposals(
         }
     }, [proposal, setProposals])
     
-    if(!isFetching.requestEnvelope && !requestEnvelope && requestEnvelopeShouldRedirect) {
+    if(!isFetching.proposalRequestEnvelope && !proposalRequestEnvelope && requestEnvelopeShouldRedirect) {
+        console.log("proposalRequestEnvelope from proposals:", proposalRequestEnvelope);
         return <Redirect to='/home'/>
     }
     if(!isFetching.proposal && !proposal && params.proposalId && proposalShouldRedirect) {
@@ -45,7 +47,7 @@ function Proposals(
     if(fireRedirect) {
         return <Redirect to={`/request/${params.id}/approve`}/>
     }
-    if (isFetching.requestEnvelope || isFetching.proposal){
+    if (isFetching.proposalRequestEnvelope || isFetching.proposal){
         return <Loader active/>
     }
 
