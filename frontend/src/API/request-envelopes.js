@@ -17,7 +17,6 @@ class RequestEnvelopeRepository extends Repository {
     }
 
     async approvePatch(data, id, config={}) {
-        console.log("THIS IS IMPORTANT:", data);
         try {
             if(data.id){
                 await API.patch(`${this.url}/${id}`, {
@@ -25,14 +24,8 @@ class RequestEnvelopeRepository extends Repository {
                 })
             }
             if(data){
-                // const searchedRequestEnvelope = await API.get(`${this.url}/${id}/request-statuses/1`);
-                // console.log(`${API.getPath()}/${id}`);
-                // console.log("ACTUAL PATH:" ,API.getPath());
-                await API.patch(`${this.getPath()}/${id}/requestStatus`,
+                await API.put(`${this.getPath()}/${id}/requestStatus`, `${this.getPath()}/${id}/requestStatuses/${2}`,
                 {headers: {'Content-Type': 'text/uri-list'}});
-                // console.log("READ THIS",searchedRequestEnvelope);
-                // searchedRequestEnvelope.requestStatus.id = 2;
-                // await API.patch(searchedRequestEnvelope, undefined, {})
                 return [true, null];
             }
         }

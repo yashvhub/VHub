@@ -8,8 +8,6 @@ const Comments = ({ commentBlock }) => {
     //     a.createdAt - b.createdAt;
     // })
 
-    console.log("commentblock: ", commentBlock);
-
     return (
         <>
 

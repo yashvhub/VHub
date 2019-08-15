@@ -20,7 +20,6 @@ function Proposals(
         skill: ''
     })
     useEffect(()=>{
-        //THIS BAD BOI IS THE CAUSE OF THE BUG!!!
         fetchProposalRequestEnvelope(params.id, "ProposalRequestEnvelope");
         setRequestEnvelopeShouldRedirect(true);
     }, [fetchProposalRequestEnvelope, params.id])
@@ -38,7 +37,6 @@ function Proposals(
     }, [proposal, setProposals])
     
     if(!isFetching.proposalRequestEnvelope && !proposalRequestEnvelope && requestEnvelopeShouldRedirect) {
-        console.log("proposalRequestEnvelope from proposals:", proposalRequestEnvelope);
         return <Redirect to='/home'/>
     }
     if(!isFetching.proposal && !proposal && params.proposalId && proposalShouldRedirect) {

@@ -17,8 +17,6 @@ class ApproveRequestForm extends React.Component {
     async componentWillMount() {
         await this.props.fetchRequestEnvelope(Number(this.props.match.params.id))
         this.setState({ shouldRedirect: true });
-        console.log("props in the component will mount" , this.props);
-
     }
 
     render() {
@@ -27,12 +25,9 @@ class ApproveRequestForm extends React.Component {
             await this.props.approveRequestEnvelope(this.props.requestEnvelope);
             this.setState({ formSuccess: true });
         }
-
-        console.log("we fetchin:" , this.props.isFetching);
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
-            return <Redirect to='/request-list' />
+            return <Redirect to='/home' />
         } else if (!this.props.requestEnvelope || this.props.isFetching) {
-            console.log("we are in the loader");
             return <Loader />
         }
 
@@ -40,6 +35,7 @@ class ApproveRequestForm extends React.Component {
         const resources = this.props.requestEnvelope.resourceRequests.map((resource, index) => {
             return <ApproveResourceForm key={index} id={resource.id}/>
         })
+
         return (
             <Grid columns='16' centered>
                 <Grid.Column width='10'>
@@ -66,11 +62,12 @@ class ApproveRequestForm extends React.Component {
 
                         <Divider section/>
                         {resources}
-                        <Form.Group>
-                        <Button icon="paperclip" label="Proposals" as={Link} to={`/request/${this.props.requestEnvelope.id}/resource-request/${1}/proposals`} onClick={() => console.log("props immediately after clicking proposal button: ", this.props)}/>
-                        </Form.Group>
+                        {this.props.requestEnvelope.resourceRequests.length > 0 &&
+                            <Form.Group>
+                                <Button icon="paperclip" label="Proposals" as={Link} to={`/request/${this.props.requestEnvelope.id}/resource-request/${this.props.requestEnvelope.resourceRequests[0].id}/proposals`}/>
+                            </Form.Group>
+                        }
                         <Comments commentBlock={this.props.requestEnvelope.requestComments}/>
-                        {/* <Form.TextArea label='Comments' placeholder='Comments...' value={this.props.requestEnvelope.requestComments[0].comment} rows='6' /> */}
 
                         <Message success header='Form Completed' content="Request Approved Successfully" />
 
