@@ -15,8 +15,6 @@ import {Form, Grid, Input, Label, Divider} from 'semantic-ui-react';
         this.setState({newSkill: e.target.value})
     }
     render(){
-        console.log('here state', this.state)
-        console.log('here props', this.props)
         const skills = this.props.skills.map((skill)=>{
             return <Label key={skill} color='blue' tag>{skill}</Label>
         })
