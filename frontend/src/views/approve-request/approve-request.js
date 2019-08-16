@@ -28,7 +28,7 @@ class ApproveRequestForm extends React.Component {
         }
 
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
-            return <Redirect to='/home' />
+            return <Redirect to='/' />
         } else if (!this.props.requestEnvelope || this.props.isFetching) {
             return <Loader />
         }

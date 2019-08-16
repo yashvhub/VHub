@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Form, Grid, Button, Message} from 'semantic-ui-react';
 import ResourceForm from './resourceForm-connector';
+import {Link} from 'react-router-dom';
 
 const RequestForm = (props) => {
     const [interviewersError, setInterviewersError] = useState(false);
@@ -153,7 +154,7 @@ const RequestForm = (props) => {
                             />
                     {resources}
                     <Form.TextArea label='Comments' placeholder='Enter Comment'/>
-                        <Form.Button onClick={validateResources}>Submit</Form.Button>
+                        <Form.Button  as={Link} to={'/'} onClick={validateResources}>Submit</Form.Button>
                 </Form>
                 </Grid.Column>
             </Grid>
