@@ -1,7 +1,7 @@
 package com.yash.vhub.repository;
 
-import java.util.Set;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,5 +13,5 @@ import com.yash.vhub.domain.RequestEnvelope;
 public interface RequestEnvelopeRepository extends JpaRepository<RequestEnvelope, Long> {
 	
 	@Query("SELECT e FROM RequestEnvelope e INNER JOIN e.requester r WHERE CONCAT(r.firstName, ' ', r.lastName) LIKE %:name%")
-	Set<RequestEnvelope> findByRequesterName(@Param("name") String name);
+	Page<RequestEnvelope> findByRequesterName(@Param("name") String name, Pageable pageRequest );
 }
