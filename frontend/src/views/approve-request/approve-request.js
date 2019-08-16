@@ -75,7 +75,7 @@ class ApproveRequestForm extends React.Component {
                         {proposals}
                         {this.props.requestEnvelope.resourceRequests.length > 0 &&
                             <Form.Group>
-                                <Button icon="paperclip" label="Proposals" as={Link} to={`/request/${this.props.requestEnvelope.id}/resource-request/${this.props.requestEnvelope.resourceRequests[0].id}/proposals`}/>
+                                <Button icon="paperclip" label="Add Proposals" as={Link} to={`/request/${this.props.requestEnvelope.id}/resource-request/${this.props.requestEnvelope.resourceRequests[0].id}/proposals`}/>
                             </Form.Group>
                         }
                         <Comments commentBlock={this.props.requestEnvelope.requestComments}/>
