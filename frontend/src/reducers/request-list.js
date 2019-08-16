@@ -6,7 +6,7 @@ function blankState(){
         didInvalidate: false,
         page: {
             totalPages: 0,
-            size: 5
+            size: 8
         },
         data: [],
     };

@@ -21,7 +21,11 @@ function RequestList({requestLists, requestListData, isFetching, page}) {
 
     };
 
-    //   const PaginationExamplePagination = () => <Pagination defaultActivePage={page.number+1} totalPages={page.totalPages} />;
+    const onPageChange = (e, {activePage}) => {
+        requestListData(search, {...page, page: Number(activePage-1)})
+    }
+
+    const PaginationExamplePagination = () => <Pagination defaultActivePage={page.number+1} totalPages={page.totalPages} onPageChange={onPageChange}/>;
 
     const object = requestLists.map((requestList) => {
         return (
@@ -91,9 +95,9 @@ function RequestList({requestLists, requestListData, isFetching, page}) {
                     {object}
                 </Table.Body>
             </Table>
-            {/*
+            
             <PaginationExamplePagination/>
-*/}
+
         </div>
     );
 }

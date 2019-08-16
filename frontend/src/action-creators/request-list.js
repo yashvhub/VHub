@@ -22,13 +22,14 @@ export function invalidateRequestListData() {
 
 
 export function fetchRequestEnvelopeList(name, page={}) {
-    const config = {
-        params: {
-            projection: "ListRequestEnvelope",
-            ...page
-        }
-    };
     return async function(dispatch,getState) {
+        const config = {
+            params: {
+                projection: "ListRequestEnvelope",
+                ...page,
+                size: getState().requestLists.page.size
+            }
+        };
         try {
             dispatch(requestRequestListsData())
             let response, status;
