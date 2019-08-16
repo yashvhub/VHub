@@ -3,8 +3,7 @@ import request from './request';
 import {addNewResource, handleChange, createNewRequest, initializeRequest} from '../../action-creators/request';
 
 function mapStateToProps(state){
-    console.log(state)
-    const currentUser = state.login.user.firstName +' '+ state.login.user.lastName;
+    const currentUser = state.user.firstName +' '+ state.user.lastName;
     const interviewerOptions = [
         {key:'1', text:'Seymore Butts', value:'Seymore Butts'},
         {key:'2', text:'Gene Vagine', value:'Gene Vagine'},

@@ -2,7 +2,8 @@ import { LOGIN_PENDING, LOGIN_SUCCESS, LOGIN_FAILED } from "../action-creators/a
 
 function blankState(){
     return {
-        isPending: false
+        isPending: false,
+        authenticated: false
     };
 }
 
@@ -18,8 +19,8 @@ function loginSuccess(state, action) {
     return {
         ...state,
         isPending: false,
+        authenticated: true,
         status: undefined,
-        user: action.user.data,
         lastUpdated: Date.now()
     }
 }

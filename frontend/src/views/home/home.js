@@ -4,18 +4,12 @@ import RequestList from "../request-list/request-list-connector";
 import {Grid, Loader, Button} from 'semantic-ui-react';
 import {Redirect, Link} from 'react-router-dom';
 
-function Home({user, isPending}){
-
-    if(!sessionStorage.getItem('email') && !sessionStorage.getItem('token') && !isPending) {
-        return <Redirect to='/'/>
-    } else if (!sessionStorage.getItem('email') || !sessionStorage.getItem('token')) {
-        return <Loader active/>
-    }
+function Home(props){
 
     return (
         <Grid columns={2} container>
             <Grid.Column width={4}>
-                <UserCard user={user}/>
+                <UserCard user={props.user}/>
                 <Grid.Row>
                     <Button primary as={Link} to={'/request'}>Create Request</Button>
                 </Grid.Row>

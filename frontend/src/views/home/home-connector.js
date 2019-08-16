@@ -2,9 +2,9 @@ import {connect} from 'react-redux';
 import home from './home';
 
 const mapStateToProps = (state) => {
-    console.log(state)
-    return ({
-    ...state.login
-})}
+    return {
+        user: state.user
+    }
+}
 
 export default connect(mapStateToProps)(home);

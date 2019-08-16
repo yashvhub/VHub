@@ -1,7 +1,11 @@
 import {LOGIN_SUCCESS, LOGIN_FAILED, LOGIN_PENDING, LOGOUT_SUCCESS, LOGOUT_FAILED, LOGOUT_PENDING} from './actions';
 import Users from '../API/users';
 
-export function loginSuccess(user){
+export function loginSuccess(user, password){
+    // console.log(user)
+    sessionStorage.setItem('token', user.data.id);
+    sessionStorage.setItem('email', user.data.email);
+    sessionStorage.setItem('password', password);
     return {
         type: LOGIN_SUCCESS,
         user
@@ -41,12 +45,14 @@ export function logoutPending(){
 }
 
 export function login(email, password) {
+    console.log('attemped login', email, password)
     return async function(dispatch) {
         dispatch(loginPending());
         try {
             const [response, status] = await Users.login(email, password);
             if(response) {
-                dispatch(loginSuccess(response));
+                console.log(response)
+                dispatch(loginSuccess(response, password));
             } else {
                 dispatch(loginFailed(status));
             }

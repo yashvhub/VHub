@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
-import Routing from "./views/routes/route";
+import Routing from "./views/routes/router";
+import Router from './views/routes/route-connector';
 import {createStore, applyMiddleware} from "redux";
 import vendorApp from './reducers/reducers';
 import { Provider } from "react-redux";
@@ -12,7 +13,7 @@ const store = createStore(vendorApp,applyMiddleware(thunk));
 
 const APP = (
     <Provider store={store}>
-        <Routing/>
+        <Router/>
     </Provider>
 );
 

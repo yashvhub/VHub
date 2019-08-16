@@ -4,22 +4,27 @@ import LoginBox from './login-box';
 import { Redirect } from 'react-router-dom';
 import { Message } from 'semantic-ui-react';
 
-function LoginPage({doLogin, user, isPending, error}){
-    if(user) {
-        sessionStorage.setItem('token', user.id);
-        sessionStorage.setItem('email', user.email);
-        sessionStorage.setItem('firstName', user.firstName);
-        sessionStorage.setItem('lastName', user.lastName);
-        sessionStorage.setItem('title', user.title);
-        sessionStorage.setItem('company', user.company);
-        console.log(sessionStorage)
-        return <Redirect to='/home'/>
-    }
+function LoginPage(props){
+    console.log(props)
+    const email = sessionStorage.getItem('email');
+    const password = sessionStorage.getItem('password');
+    const token = sessionStorage.getItem('token');
+    const error = props.error
+    console.log(email,password,token)
     const status = error ? ('statusText' in error) ? `${error.status}: ${error.statusText}` : error.status : undefined;
+    const loginStoredUser = () => {if(email && token && password && !props.isPending){
+            props.doLogin(email, password)
+        }
+    }
+
+    if(props.login.authenticated){
+        return <Redirect to='/'/>
+    }else{
+        loginStoredUser()
+    }
+
     return (
-        <div>
-            <LoginBox doLogin={doLogin} isPending={isPending} status={status} user={user}/>
-        </div>
+            <LoginBox doLogin={props.doLogin} isPending={props.isPending} status={status} user={props.user}/>
     );
 }
 

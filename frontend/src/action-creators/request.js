@@ -30,7 +30,6 @@ export function handleChange(key, value){
 }
 
 export function createNewRequest(newRequestObject) {
-    console.log(newRequestObject)
     return async () =>{ 
         try {
             let response = await RequestEnvelops.post(newRequestObject)

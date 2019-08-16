@@ -33,7 +33,6 @@ class ApproveRequestForm extends React.Component {
             return <Loader />
         }
 
-
         const resources = this.props.requestEnvelope.resourceRequests.map((resource, index) => {
             return <ApproveResourceForm key={index} id={resource.id}/>
         })

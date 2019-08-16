@@ -3,7 +3,6 @@ import ResourceForm from './resourceForm';
 import {addNewSkill} from '../../action-creators/request';
 
 function mapStateToProps(state, ownProps){
-    console.log('redux state', state)
     return{
         requestedResource: state.request.requestedResources[ownProps.id]
     }
