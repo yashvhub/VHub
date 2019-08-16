@@ -3,6 +3,7 @@ import { Form, Message, Grid, Button, FormGroup, Loader, Divider } from 'semanti
 import ApproveResourceForm from './approve-resourceForm-connector';
 import { Redirect, Link } from 'react-router-dom';
 import Comments from '../common/comments.js';
+import {ApproveProposal} from './approve-proposal.js';
 
 class ApproveRequestForm extends React.Component {
     constructor(props) {
@@ -25,6 +26,7 @@ class ApproveRequestForm extends React.Component {
             await this.props.approveRequestEnvelope(this.props.requestEnvelope);
             this.setState({ formSuccess: true });
         }
+
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
             return <Redirect to='/home' />
         } else if (!this.props.requestEnvelope || this.props.isFetching) {
@@ -34,6 +36,13 @@ class ApproveRequestForm extends React.Component {
 
         const resources = this.props.requestEnvelope.resourceRequests.map((resource, index) => {
             return <ApproveResourceForm key={index} id={resource.id}/>
+        })
+
+
+        const proposals = this.props.requestEnvelope.resourceRequests.map((resource) => {
+           return resource.proposals.map((proposal) => {
+                return <ApproveProposal proposal={proposal}/>
+            })
         })
 
         return (
@@ -62,6 +71,9 @@ class ApproveRequestForm extends React.Component {
 
                         <Divider section/>
                         {resources}
+                        <Divider section/>
+                        <h3>Proposals</h3>
+                        {proposals}
                         {this.props.requestEnvelope.resourceRequests.length > 0 &&
                             <Form.Group>
                                 <Button icon="paperclip" label="Proposals" as={Link} to={`/request/${this.props.requestEnvelope.id}/resource-request/${this.props.requestEnvelope.resourceRequests[0].id}/proposals`}/>

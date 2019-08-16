@@ -39,8 +39,6 @@ export class Repository {
     }
 
     getPath() {
-        console.log('Repository::getPath',DEFAULT_CONFIG.baseURL);
-        console.log('Repository::getPath',this.url);
         return `${DEFAULT_CONFIG.baseURL}/${this.url}`
     }
 

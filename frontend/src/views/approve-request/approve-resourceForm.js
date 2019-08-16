@@ -8,9 +8,7 @@ import {Form, Grid, Input, Label, Divider} from 'semantic-ui-react';
             newSkill:'',
         }
     }
-    componentDidUpdate(nextProps, nextState){
-        console.log(nextProps)
-    }
+
     handleInput = (e) => {
         this.setState({newSkill: e.target.value})
     }

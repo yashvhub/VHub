@@ -46,7 +46,6 @@ function addNewResource(state) {
 }
 
 function addNewSkill(state, action) {
-    console.log(action)
     return{
         ...state,
             requestedResources:[
@@ -61,7 +60,6 @@ function addNewSkill(state, action) {
 }
 
 function requestHandleChange(state, action){
-    console.log(action)
     return{
         ...state,
         [action.key]: action.value
