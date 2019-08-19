@@ -1,9 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
-import {Table, Grid, Form, Button, Loader, Pagination} from 'semantic-ui-react';
+import {Table, Grid, Form, Button, Loader, Pagination, Dropdown} from 'semantic-ui-react';
 
 function RequestList({requestLists, requestListData, isFetching, page}) {
     const [search, setSearch] = useState('');
+    const [number, setNumber] = useState('');
+
+    const options = [
+        {key: '1', text: '5', value: 5 },
+        {key: '2', text: '10', value: 10 },
+        {key: '3', text: '15', value: 15 },
+        {key: '4', text: '20', value: 20 }
+    ]
 
     useEffect(() => {
         requestListData()
@@ -13,6 +21,13 @@ function RequestList({requestLists, requestListData, isFetching, page}) {
         setSearch(value);
         if(value === ''){
             requestListData()
+        }
+    };
+
+    const handleChange = (e, {value}) => {
+        setNumber(value)
+        if(value) {
+            requestListData(search, {...page, size: value})
         }
     };
 
@@ -75,6 +90,9 @@ function RequestList({requestLists, requestListData, isFetching, page}) {
                     </Grid.Column>
                     <Grid.Column verticalAlign='bottom'>
                         <Button disabled={isFetching} onClick={onSearchClick}>{isFetching ? <Loader active inline='centered' size='tiny'/> : 'Search'}</Button>
+                    </Grid.Column>
+                    <Grid.Column>
+                    <Dropdown clearable placeholder='Select Size' options={options} selection value={number} onChange={handleChange}/>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>

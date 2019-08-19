@@ -1,5 +1,5 @@
 import RequestEnvelopes from '../API/request-envelopes'
-import {REQUEST_REQUEST_LIST_DATA, RECEIVE_REQUEST_LIST_DATA, INVALIDATE_REQUEST_LIST_DATA} from "./actions";
+import {REQUEST_REQUEST_LIST_DATA, RECEIVE_REQUEST_LIST_DATA, INVALIDATE_REQUEST_LIST_DATA, RESIZE_TABLE_DATA} from "./actions";
 
 export function requestRequestListsData() {
     return {
@@ -20,14 +20,21 @@ export function invalidateRequestListData() {
     }
 }
 
+export function reSizeTableData(size) {
+    return {
+        size,
+        type: RESIZE_TABLE_DATA
+    }
+}
+
 
 export function fetchRequestEnvelopeList(name, page={}) {
     return async function(dispatch,getState) {
         const config = {
             params: {
                 projection: "ListRequestEnvelope",
-                ...page,
-                size: getState().requestLists.page.size
+                size: getState().requestLists.page.size,
+                ...page
             }
         };
         try {

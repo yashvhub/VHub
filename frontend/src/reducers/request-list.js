@@ -6,7 +6,7 @@ function blankState(){
         didInvalidate: false,
         page: {
             totalPages: 0,
-            size: 8
+            size: 5
         },
         data: [],
     };
@@ -43,6 +43,7 @@ export default function (state = blankState(), action) {
         [REQUEST_REQUEST_LIST_DATA]: requestRequestListsData,
         [RECEIVE_REQUEST_LIST_DATA]: receiveRequestListData,
         [INVALIDATE_REQUEST_LIST_DATA]: invalidateRequestListData,
+        
     };
 
     const reducer = actionHandlers[action.type];
