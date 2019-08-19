@@ -20,14 +20,13 @@ export function invalidateRequestListData() {
     }
 }
 
-
 export function fetchRequestEnvelopeList(name, page={}) {
     return async function(dispatch,getState) {
         const config = {
             params: {
                 projection: "ListRequestEnvelope",
-                ...page,
-                size: getState().requestLists.page.size
+                size: getState().requestLists.page.size,
+                ...page
             }
         };
         try {

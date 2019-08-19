@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Form, Grid, Input, Label, Divider} from 'semantic-ui-react';
+import {Form, Grid, Input, Label, Divider, Icon} from 'semantic-ui-react';
 
 function ResourceForm (props){
     const [newSkill, setNewSkill] = useState('');
@@ -14,9 +14,15 @@ function ResourceForm (props){
     const addSkillToResource = () => {
         props.addNewSkill(newSkill, index)
     }
+
+    const handleDeleteClick = (id, item) => () => {
+        return props.removeSkill(id, item)
+    }
+
     const skillsLabels = skills.map((skill)=>{
-        return <Label key={skill} color='blue' tag>{skill}</Label>
+        return <Label key={skill} color='blue' tag>{skill} <Icon name='delete' link onClick={handleDeleteClick(index,skill)}/></Label>
     })
+
     return(
         <>
             <h3>Resource {index+1}</h3>

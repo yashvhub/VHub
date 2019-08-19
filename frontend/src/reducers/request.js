@@ -1,4 +1,4 @@
-import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST, REQUEST_USERS, RECEIVE_INTERVIEWERS, RECEIVE_APPROVERS, HAS_ERROR_USERS} from "../action-creators/actions";
+import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST, REQUEST_USERS, RECEIVE_INTERVIEWERS, RECEIVE_APPROVERS, HAS_ERROR_USERS, REMOVE_SKILL} from "../action-creators/actions";
 
 
 function blankState(){
@@ -100,6 +100,26 @@ function invalidateUsers(state, action) {
     }
 }
 
+function removeSkill (state, action) {
+    return {
+        ...state,
+        requestedResources: [
+            ...state.requestedResources.map((value, index) => {
+                    if(index === action.id) {
+                        return {
+                            ...value,
+                            skills: value.skills.filter((item) => {
+                                return item !== action.item
+                            })
+                        }
+                    } else {
+                       return value
+                    }
+            })
+        ]
+    }
+}
+
 export default function (state = blankState(), action) {
     const actionHandlers = {
         [ADD_NEW_RESOURCE]: addNewResource,
@@ -110,6 +130,7 @@ export default function (state = blankState(), action) {
         [RECEIVE_APPROVERS]: receiveApprovers,
         [RECEIVE_INTERVIEWERS]: receiveInterviewers,
         [HAS_ERROR_USERS]: invalidateUsers,
+        [REMOVE_SKILL]: removeSkill
     };
 
     const reducer = actionHandlers[action.type];
