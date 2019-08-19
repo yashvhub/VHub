@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
 import {Form, Grid, Button, Message} from 'semantic-ui-react';
 import ResourceForm from './resourceForm-connector';
 import {Link} from 'react-router-dom';
@@ -16,6 +15,8 @@ const RequestForm = (props) => {
     
     useEffect(()=>{
         props.initializeRequest(props.currentUser)
+        props.fetchApprovers("APPROVER");
+        props.fetchInterviewers("INTERVIEWER");
     },[])
     
     const {requestedBy, requestDate, interviewers, approvers, businessCase, clientName, team, manager, locationPref, requestedResources, comments} = props.request;
@@ -42,6 +43,7 @@ const RequestForm = (props) => {
     const resources = requestedResources.map((resource)=>{
         return <ResourceForm key={resource.index} id={resource.index}/>
     })
+
         return(
             <Grid columns='16' centered>
                 <Grid.Column width='10'>

@@ -1,25 +1,14 @@
 import {connect} from 'react-redux';
 import request from './request';
-import {addNewResource, handleChange, createNewRequest, initializeRequest} from '../../action-creators/request';
+import {addNewResource, handleChange, createNewRequest, initializeRequest, fetchApprovers, fetchInterviewers} from '../../action-creators/request';
 
 function mapStateToProps(state){
     const currentUser = state.user.firstName +' '+ state.user.lastName;
-    const interviewerOptions = [
-        {key:'1', text:'Seymore Butts', value:'Seymore Butts'},
-        {key:'2', text:'Gene Vagine', value:'Gene Vagine'},
-        {key:'3', text:'Rick Sanchez', value:'Rick Sanchez'}
-    ]
-    const approverOptions = [
-        {key:'1', text:'Seymore Butts', value:'Seymore Butts'},
-        {key:'2', text:'Gene Vagine', value:'Gene Vagine'},
-        {key:'3', text:'Rick Sanchez', value:'Rick Sanchez'}
-    ]
-
     return{
-        interviewerOptions,
-        approverOptions,
+        interviewerOptions: state.interviewerOptions,
+        approverOptions: state.approverOptions,
         request: state.request,
-        currentUser
+        currentUser,
     }
     
 }
@@ -40,7 +29,14 @@ function mapDispatchToProps(dispatch) {
         },
         handleChange: (event, {name, value}) => {
             dispatch(handleChange(name, value))
+        },
+        fetchApprovers: (role) => {
+            dispatch(fetchApprovers(role));
+        },
+        fetchInterviewers: (role) => {
+            dispatch(fetchInterviewers(role));
         }
+
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(request);

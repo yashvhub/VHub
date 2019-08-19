@@ -1,4 +1,4 @@
-import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST} from "../action-creators/actions";
+import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST, REQUEST_USERS, RECEIVE_INTERVIEWERS, RECEIVE_APPROVERS, HAS_ERROR_USERS} from "../action-creators/actions";
 
 
 function blankState(){
@@ -14,7 +14,9 @@ function blankState(){
         manager: '',
         locationPref: '',
         comments: [],
-        requestedResources: []
+        requestedResources: [],
+        approverOptions:[],
+        interviewerOptions:[]
     }
 }
 
@@ -66,12 +68,48 @@ function requestHandleChange(state, action){
     }
 }
 
+function requestUsers(state, action) {
+    return {
+        ...state,
+        didInvalidate: false,
+        isFetching: true
+    }
+}
+
+function receiveApprovers(state, action){
+    return {
+        ...state,
+        isFetching: false,
+        approverOptions: action.approvers,
+    }
+}
+
+function receiveInterviewers(state, action){
+    return {
+        ...state,
+        isFetching: false,
+        interviewerOptions: action.interviewers,
+    }
+}
+
+function invalidateUsers(state, action) {
+    return {
+        ...state,
+        isFetching: false,
+        didInvalidate: true
+    }
+}
+
 export default function (state = blankState(), action) {
     const actionHandlers = {
         [ADD_NEW_RESOURCE]: addNewResource,
         [ADD_NEW_RESOURCE_SKILL]:addNewSkill,
         [REQUEST_HANDLECHANGE]: requestHandleChange,
-        [INTIALIZE_REQUEST]: initializeRequest
+        [INTIALIZE_REQUEST]: initializeRequest,
+        [REQUEST_USERS]: requestUsers,
+        [RECEIVE_APPROVERS]: receiveApprovers,
+        [RECEIVE_INTERVIEWERS]: receiveInterviewers,
+        [HAS_ERROR_USERS]: invalidateUsers,
     };
 
     const reducer = actionHandlers[action.type];
