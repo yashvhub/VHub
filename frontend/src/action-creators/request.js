@@ -1,4 +1,4 @@
-import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST} from "./actions";
+import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST, REMOVE_SKILL} from "./actions";
 import RequestEnvelops from '../API/request-envelopes';
 
 export function initializeRequest(currentUser) {
@@ -26,6 +26,14 @@ export function handleChange(key, value){
         type: REQUEST_HANDLECHANGE,
         key,
         value
+    }
+}
+
+export function removeSkill(id, item) {
+    return {
+        id,
+        item,
+        type: REMOVE_SKILL
     }
 }
 
