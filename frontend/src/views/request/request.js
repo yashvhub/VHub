@@ -12,6 +12,7 @@ const RequestForm = (props) => {
     const [managerError, setManagerError] = useState(false);
     const [locationPrefError, setLocationPrefError] = useState(false);
     const [resourcesError, setResourcesError] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
     
     useEffect(()=>{
         props.initializeRequest(props.currentUser)
@@ -28,8 +29,19 @@ const RequestForm = (props) => {
         )
     }
     const validateResources = () => {
-       return requestedResources.length === 0
-        ? setResourcesError(true) : props.createNewRequest(props.request)
+        validateArray(requestedResources, setResourcesError);
+        validateArray(interviewers, setInterviewersError);
+        validateArray(approvers, setApproversError);
+        validateString(businessCase, setBusinessCaseError);
+        validateString(clientName, setClientNameError);
+        validateString(team, setTeamError);
+        validateString(manager, setManagerError);
+        validateString(locationPref, setLocationPrefError);
+        console.log('look here', props.request)
+        if(!interviewersError|| !approversError || !businessCaseError || !clientNameError || !teamError || !managerError || !locationPrefError || !resourcesError){
+                return props.createNewRequest(props.request, props.user)
+        }
+
     }
 
     const validateString = (string, callback) => {
@@ -106,7 +118,7 @@ const RequestForm = (props) => {
                         label='Client Name' 
                         placeholder='Client Name' 
                         value={clientName} 
-                        name='client' 
+                        name='clientName' 
                         onChange={props.handleChange} 
                         onBlur={() => validateString(clientName, setClientNameError)} 
                         error={clientNameError}
@@ -137,7 +149,7 @@ const RequestForm = (props) => {
                         fluid 
                         label='Location Preference' 
                         placeholder='Location' 
-                        name='location' 
+                        name='locationPref' 
                         value={locationPref} 
                         onChange={props.handleChange} 
                         onBlur={() => validateString(locationPref, setLocationPrefError)} 
@@ -156,7 +168,7 @@ const RequestForm = (props) => {
                             />
                     {resources}
                     <Form.TextArea label='Comments' placeholder='Enter Comment'/>
-                        <Form.Button  as={Link} to={'/'} onClick={validateResources}>Submit</Form.Button>
+                        <Form.Button onClick={validateResources}>Submit</Form.Button>
                 </Form>
                 </Grid.Column>
             </Grid>

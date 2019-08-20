@@ -5,10 +5,10 @@ import ConfirmTable from './confirmTable';
 
 class ConfirmPage extends React.Component{
     constructor(props){
+        console.log(props)
         super(props)
 
         this.state = {
-            requestEnvelope: this.props.requestEnvelope,
             shouldRedirect: false,
             formSuccess: false,
         }
@@ -20,7 +20,6 @@ class ConfirmPage extends React.Component{
     }
 
     render(){
-
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
             return <Redirect to='/' />
         } else if (!this.props.requestEnvelope) {

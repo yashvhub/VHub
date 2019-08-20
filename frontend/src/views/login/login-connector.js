@@ -3,7 +3,6 @@ import login from './login';
 import {login as doLogin} from '../../action-creators/login';
 
 const mapStateToProps = (state) => {
-    console.log('fuck my ass', state.login.authenticated)
     return ({
     login: state.login,
     user: state.user,

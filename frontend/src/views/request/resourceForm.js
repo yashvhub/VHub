@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import {Form, Grid, Input, Label, Divider, Icon} from 'semantic-ui-react';
 
 function ResourceForm (props){
+    console.log(props)
     const [newSkill, setNewSkill] = useState('');
     const [quantityError, setQuantityError] = useState(false);
     const [compensationError, setCompensationError] = useState(false);
     const [experienceError, setExperienceError] = useState(false);
     const [skillsError, setSkillsError] = useState(false);
     const {compensation, experience, index, number, skills} = props.requestedResource
+    
     const handleInput = (e) => {
         setNewSkill(e.target.value)
     }
@@ -23,6 +25,13 @@ function ResourceForm (props){
         return <Label key={skill} color='blue' tag>{skill} <Icon name='delete' link onClick={handleDeleteClick(index,skill)}/></Label>
     })
 
+    const validateString = (string, callback) => {
+        return string === '' ? callback(true) : callback(false)
+    }
+    const validateArray = (array, callback) => {
+        return array.length === 0 ? callback(true): callback(false)
+    }
+
     return(
         <>
             <h3>Resource {index+1}</h3>
@@ -31,23 +40,27 @@ function ResourceForm (props){
                 fluid 
                 label='Number of Resources' 
                 placeholder='quantity' 
-                onBlur={number === '' ? () => {setQuantityError(true)}:null} 
+                name='number'
+                onChange={props.handleChange}
+                onBlur={()=> validateString(number, setQuantityError)} 
                 error={quantityError}
                 />
-            </Form.Group>
-            <Form.Group widths='equal'>
                 <Form.Input 
                 fluid 
                 label='$/hr' 
-                placeholder='$' 
-                onBlur={compensation === '' ? () => {setCompensationError(true)}:null} 
+                placeholder='$'
+                name='compensation'
+                onChange={props.handleChange} 
+                onBlur={()=> validateString(compensation, setCompensationError)} 
                 error={compensationError}
                 />
                 <Form.Input 
                 fluid 
-                label='Experience In Years Required' 
+                label='Experience In Years' 
                 placeholder='years' 
-                onBlur={experience === '' ? () => {setExperienceError(true)}:null} 
+                name='experience'
+                onChange={props.handleChange}
+                onBlur={()=> validateString(experience, setExperienceError)} 
                 error={experienceError}
                 />
             </Form.Group>
@@ -58,7 +71,7 @@ function ResourceForm (props){
                 labelPosition='right'
                 placeholder='Add Skills'
                 onChange={handleInput}
-                onBlur={skills.length === 0 ? () => {setSkillsError(true)}:null} 
+                onBlur={()=> validateArray(skills, setSkillsError)} 
                 error={skillsError}
                 />
             <Form.Group>

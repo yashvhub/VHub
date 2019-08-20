@@ -1,5 +1,4 @@
-import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST, REQUEST_USERS, RECEIVE_INTERVIEWERS, RECEIVE_APPROVERS, HAS_ERROR_USERS, REMOVE_SKILL} from "../action-creators/actions";
-
+import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST,REMOVE_SKILL, REQUEST_ERROR, EDIT_RESOURCE, REQUEST_USERS, RECEIVE_INTERVIEWERS, RECEIVE_APPROVERS, HAS_ERROR_USERS,} from "../action-creators/actions";
 
 function blankState(){
     return {
@@ -16,7 +15,15 @@ function blankState(){
         comments: [],
         requestedResources: [],
         approverOptions:[],
-        interviewerOptions:[]
+        interviewerOptions:[],
+        formSubmitError: false
+    }
+}
+
+function error(state){
+    return{
+        ...state,
+        formSubmitError:true
     }
 }
 
@@ -25,11 +32,11 @@ function initializeRequest(state, action){
     const dd = String(today.getDate()).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const yyyy = today.getFullYear();
-    const requestDate = mm+'/'+dd+'/'+yyyy;
+    const requestDate = yyyy+'-'+mm+'-'+dd;
     return {
         ...state,
         requestedBy: action.currentUser,
-        requestDate,
+        requestDate
     }
 }
 
@@ -45,6 +52,23 @@ function addNewResource(state) {
     return{
         ...state
     }
+}
+
+function editResource(state, action){
+    console.log(action)
+    const field = action.field;
+    const value = action.value
+    return{
+        ...state,
+            requestedResources:[
+                ...state.requestedResources.slice(0,action.index),
+                {
+                    ...state.requestedResources[action.index],
+                    [field]: value
+                },
+                ...state.requestedResources.slice(action.index+1)
+            ]
+        }
 }
 
 function addNewSkill(state, action) {
@@ -130,7 +154,9 @@ export default function (state = blankState(), action) {
         [RECEIVE_APPROVERS]: receiveApprovers,
         [RECEIVE_INTERVIEWERS]: receiveInterviewers,
         [HAS_ERROR_USERS]: invalidateUsers,
-        [REMOVE_SKILL]: removeSkill
+        [REMOVE_SKILL]: removeSkill,
+        [REQUEST_ERROR]: error,
+        [EDIT_RESOURCE]: editResource
     };
 
     const reducer = actionHandlers[action.type];

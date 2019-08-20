@@ -29,7 +29,7 @@ export function invalidateRequestEnvelope() {
 
 
 export function fetchRequestEnvelope(id, projection="FullRequestEnvelope") {
-    return async function(dispatch,getState) {
+    return async function(dispatch, getState) {
         try {
             dispatch(requestRequestEnvelope())
             const [response, status] = await RequestEnvelopes.get(id, {params: {projection}});

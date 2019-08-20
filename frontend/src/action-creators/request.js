@@ -1,4 +1,4 @@
-import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST, REQUEST_USERS, RECEIVE_APPROVERS, RECEIVE_INTERVIEWERS, HAS_ERROR_USERS, REMOVE_SKILL} from "./actions";
+import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST,REMOVE_SKILL, REQUEST_ERROR, EDIT_RESOURCE, REQUEST_USERS, RECEIVE_APPROVERS, RECEIVE_INTERVIEWERS, HAS_ERROR_USERS} from "./actions";
 import RequestEnvelops from '../API/request-envelopes';
 import Users from "../API/users";
 
@@ -6,6 +6,12 @@ export function initializeRequest(currentUser) {
     return {
         type: INTIALIZE_REQUEST,
         currentUser
+    }
+}
+
+export function setError(){
+    return{
+        type: REQUEST_ERROR
     }
 }
 
@@ -18,6 +24,14 @@ export function addNewSkill(newSkill, index){
     return {
         type:ADD_NEW_RESOURCE_SKILL,
         newSkill,
+        index
+    }
+}
+export function editResource(field, value, index){
+    return {
+        type: EDIT_RESOURCE,
+        field,
+        value,
         index
     }
 }
@@ -38,10 +52,27 @@ export function removeSkill(id, item) {
     }
 }
 
-export function createNewRequest(newRequestObject) {
+export function createNewRequest(newRequestObject, requestUser) {
+    console.log('newRequest', newRequestObject, requestUser)
+    const baseRequest = {
+        requestDate: newRequestObject.requestDate,
+        businessCase: newRequestObject.businessCase,
+        clientName: newRequestObject.clientName,
+        team: newRequestObject.team,
+        manager: newRequestObject.manager
+    }
+    const dataObject = {
+        baseRequest,
+        requester: requestUser.id,
+        interviewers: newRequestObject.interviewers,
+        resources: newRequestObject.requestedResources,
+        approver: newRequestObject.approvers
+
+    }
+
     return async () =>{ 
         try {
-            let response = await RequestEnvelops.post(newRequestObject)
+            let response = await RequestEnvelops.post(dataObject)
             console.log(response)
         } catch(e){
             console.log(e)
