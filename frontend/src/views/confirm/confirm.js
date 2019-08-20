@@ -1,6 +1,5 @@
 import React from 'react';
 import {Redirect} from 'react-router';
-import PropTypes from 'prop-types';
 import {Form, Grid, Button, Loader, List, Segment, Divider, Header} from 'semantic-ui-react';
 import ConfirmTable from './confirmTable';
 
@@ -16,18 +15,18 @@ class ConfirmPage extends React.Component{
     }
 
     async componentWillMount() {
-        await this.props.fetchRequestEnvelope(Number(this.props.match.params.id))
+        await this.props.fetchRequestEnvelope(Number(this.props.match.params.id));
         // this.setState({ shouldRedirect: true });
     }
 
     render(){
 
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
-            return <Redirect to='/home' />
-        } else if (!this.props.requestEnvelope) {
+            return <Redirect to='/' />
+        } else if (!this.props.requestEnvelope || this.props.isFetching) {
             return <Loader />
         }
-        
+
         const value = this.props.requestEnvelope.proposalType.type.toLowerCase();
         return(
             <Grid columns='16' centered>

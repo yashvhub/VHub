@@ -5,7 +5,7 @@ import {fetchRequestEnvelope} from '../../action-creators/request-envelopes';
 
 function mapStateToProps({requestEnvelope}){
     return {
-        requestEnvelope: requestEnvelope.item
+        requestEnvelope: requestEnvelope.envelope
     }
     
 }
