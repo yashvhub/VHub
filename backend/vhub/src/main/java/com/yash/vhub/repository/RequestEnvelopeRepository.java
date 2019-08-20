@@ -14,4 +14,8 @@ public interface RequestEnvelopeRepository extends JpaRepository<RequestEnvelope
 	
 	@Query("SELECT e FROM RequestEnvelope e INNER JOIN e.requester r WHERE CONCAT(r.firstName, ' ', r.lastName) LIKE %:name%")
 	Page<RequestEnvelope> findByRequesterName(@Param("name") String name, Pageable pageRequest );
+	
+	@Query("SELECT e FROM RequestEnvelope e INNER JOIN e.requester r WHERE CONCAT(r.firstName, ' ', r.lastName) LIKE %:name% ORDER BY e.requestDate DESC")
+	Page<RequestEnvelope> findByRequesterNameByRequestDateDesc(@Param("name") String name, Pageable pageRequest );
+	
 }
