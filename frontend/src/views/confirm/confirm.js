@@ -23,7 +23,7 @@ class ConfirmPage extends React.Component{
 
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
             return <Redirect to='/' />
-        } else if (!this.props.requestEnvelope || this.props.isFetching) {
+        } else if (!this.props.requestEnvelope) {
             return <Loader />
         }
 
