@@ -68,8 +68,10 @@ class ConfirmPage extends React.Component{
                         <Form.Input fluid label='Team' value={this.props.requestEnvelope.team} readOnly/>
                         <Form.Input fluid label='Manager' value={this.props.requestEnvelope.manager} readOnly/>
                     </Form.Group>
-                    <Form.Group>
-                        <Form.Input fluid label='Location Preference' placeholder='Location' value={this.props.requestEnvelope.locationPreference.stateOrProvince} readOnly/>
+                    <Form.Group widths='equal'>
+                        <Form.Input fluid label='City Preference' placeholder='Location' value={this.props.requestEnvelope.locationPreference.city} readOnly/>
+                        <Form.Input fluid label='State Preference' placeholder='Location' value={this.props.requestEnvelope.locationPreference.stateOrProvince} readOnly/>
+                        <Form.Input fluid label='Country Preference' placeholder='Location' value={this.props.requestEnvelope.locationPreference.country} readOnly/>
                     </Form.Group>
                     <br/>
                     <Divider horizontal>
