@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import { Comment, Header, Checkbox} from 'semantic-ui-react';
+import React, { useState } from 'react';
+import { Comment, Header, Checkbox, Button, Form } from 'semantic-ui-react';
 
 const Comments = ({ commentBlock }) => {
     const [collapsed, setCollapsed] = useState(true);
     const handleCheckbox = (e, { checked }) => setCollapsed(!collapsed);
-    // let sortedComments = commentBlock.sort((a,b) => {
-    //     a.createdAt - b.createdAt;
-    // })
+    let sortedComments = commentBlock.sort((a,b) => {
+        return new Date(a.createdAt) - new Date(b.createdAt)
+    })
 
     return (
         <>
@@ -16,10 +16,10 @@ const Comments = ({ commentBlock }) => {
                 <Header as='h3' dividing>
                     Comments
                 </Header>
-                {commentBlock.map(comment => (
+                {sortedComments.map(comment => (
                     <Comment>
                         <Comment.Content>
-                            {/* <Comment.Author>{comment}</Comment.Author> */}
+                            <Comment.Author>{`${comment.author.firstName} ${comment.author.lastName}`}</Comment.Author>
                             <Comment.Metadata>
                                 <div>Commented on: {comment.createdAt}</div>
                             </Comment.Metadata>
@@ -27,6 +27,12 @@ const Comments = ({ commentBlock }) => {
                         </Comment.Content>
                     </Comment>
                 ))}
+
+
+                <Form reply>
+                    <Form.TextArea />
+                    <Button content='Add Reply' labelPosition='left' icon='edit' primary />
+                </Form>
 
             </Comment.Group>
         </>

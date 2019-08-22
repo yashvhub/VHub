@@ -2,12 +2,12 @@ import API, {Repository} from '.';
 import ResourceRequests from './resource-requests';
 import Skills from './skills';
 import Locations from './locations';
+import Users from './users';
 
 class RequestEnvelopeRepository extends Repository {
     async post(data, config={headers:{'Content-Type': 'application/json'}}){
         try{
             const response = await API.post(this.url, data.baseRequest, config);
-
 
             const locationPref = {
                 city: data.locationCityPref,
@@ -19,6 +19,18 @@ class RequestEnvelopeRepository extends Repository {
             console.log("LOCATION RESPONSE", locationResponse)
 
                 const requestPath = `${this.getPath()}/${response.data.id}/`
+
+                const approversUriList = data.approver.map(approve =>
+                    `${Users.getPath()}/${approve}`)
+
+                const approverResponse = API.put(`${requestPath}/approvers`, 
+                approversUriList.join('\n'),
+                {
+                    headers: {
+                        'Content-Type': 'text/uri-list'
+                    }
+                });
+
                 const requestEnvelope ={
                     requestStatus: `${requestPath}requestStatuses/1`, //neeed to be defaulted upon creation
                     interviewer: `${requestPath}interviewer/${data.interviewers[0]}`, //needs to be changed to accept an array
