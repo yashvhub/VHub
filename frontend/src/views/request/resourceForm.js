@@ -26,9 +26,6 @@ function ResourceForm (props){
         return props.removeSkill(id, item)
     }
 
-    // const skillsLabels = skills.map((skill)=>{
-    //     return <Label key={skill} color='blue' tag>{skill} <Icon name='delete' link onClick={handleDeleteClick(index,skill)}/></Label>
-    // })
 
     const validateString = (string, callback) => {
         return string === '' ? callback(true) : callback(false)
@@ -80,9 +77,7 @@ function ResourceForm (props){
                         onBlur={()=> validateArray(skills, setSkillsError)} 
                         error={skillsError}
                         />
-            {/* <Form.Group>
-                {skillsLabels}
-            </Form.Group> */}
+
             <Divider/>
         </>
     )
