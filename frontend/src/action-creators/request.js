@@ -53,7 +53,6 @@ export function removeSkill(id, item) {
 }
 
 export function createNewRequest(newRequestObject, requestUser) {
-    console.log('newRequest', newRequestObject, requestUser)
     const baseRequest = {
         requestDate: newRequestObject.requestDate,
         businessCase: newRequestObject.businessCase,
@@ -66,16 +65,18 @@ export function createNewRequest(newRequestObject, requestUser) {
         requester: requestUser.id,
         interviewers: newRequestObject.interviewers,
         resources: newRequestObject.requestedResources,
-        approver: newRequestObject.approvers
+        approver: newRequestObject.approvers,
+        locationCityPref: newRequestObject.locationCityPref,
+        locationStatePref: newRequestObject.locationStatePref,
+        locationCountryPref: newRequestObject.locationCountryPref,
 
     }
 
     return async () =>{ 
         try {
             let response = await RequestEnvelops.post(dataObject)
-            console.log(response)
         } catch(e){
-            console.log(e)
+            console.error(e)
         }
     }
 }

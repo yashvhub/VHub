@@ -3,13 +3,19 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import Routing from "./views/routes/router";
 import Router from './views/routes/route-connector';
-import {createStore, applyMiddleware} from "redux";
+import {createStore, applyMiddleware, compose} from "redux";
 import vendorApp from './reducers/reducers';
 import { Provider } from "react-redux";
 import 'semantic-ui-css/semantic.min.css';
 import thunk from 'redux-thunk';
+import {createLogger} from 'redux-logger';
 
-const store = createStore(vendorApp,applyMiddleware(thunk));
+
+const logger = createLogger({
+    log: (process.env.NODE_ENV || 'production') === 'development' ? 'log' : 'warn',
+})
+
+const store = createStore(vendorApp,compose(applyMiddleware(thunk),applyMiddleware(logger)));
 
 const APP = (
     <Provider store={store}>

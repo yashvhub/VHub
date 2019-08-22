@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Form, Grid, Input, Label, Divider, Icon} from 'semantic-ui-react';
 
 function ResourceForm (props){
-    console.log(props)
     const [newSkill, setNewSkill] = useState('');
     const [quantityError, setQuantityError] = useState(false);
     const [compensationError, setCompensationError] = useState(false);
@@ -10,6 +9,12 @@ function ResourceForm (props){
     const [skillsError, setSkillsError] = useState(false);
     const {compensation, experience, index, number, skills} = props.requestedResource
     
+    const {fetchSkills} = props;
+
+    useEffect(() => {
+        fetchSkills();
+    }, [fetchSkills])
+
     const handleInput = (e) => {
         setNewSkill(e.target.value)
     }
@@ -21,9 +26,9 @@ function ResourceForm (props){
         return props.removeSkill(id, item)
     }
 
-    const skillsLabels = skills.map((skill)=>{
-        return <Label key={skill} color='blue' tag>{skill} <Icon name='delete' link onClick={handleDeleteClick(index,skill)}/></Label>
-    })
+    // const skillsLabels = skills.map((skill)=>{
+    //     return <Label key={skill} color='blue' tag>{skill} <Icon name='delete' link onClick={handleDeleteClick(index,skill)}/></Label>
+    // })
 
     const validateString = (string, callback) => {
         return string === '' ? callback(true) : callback(false)
@@ -64,19 +69,20 @@ function ResourceForm (props){
                 error={experienceError}
                 />
             </Form.Group>
-                <Input
-                icon='tags'
-                iconPosition='left'
-                label={{tag: true, content: 'Add Skill', onClick: addSkillToResource}}
-                labelPosition='right'
-                placeholder='Add Skills'
-                onChange={handleInput}
-                onBlur={()=> validateArray(skills, setSkillsError)} 
-                error={skillsError}
-                />
-            <Form.Group>
+            <Form.Dropdown 
+                        fluid 
+                        multiple selection 
+                        label='skills' 
+                        options={props.skillsOptions} 
+                        name='skills'  
+                        placeholder='Select' 
+                        onChange={props.handleChange} 
+                        onBlur={()=> validateArray(skills, setSkillsError)} 
+                        error={skillsError}
+                        />
+            {/* <Form.Group>
                 {skillsLabels}
-            </Form.Group>
+            </Form.Group> */}
             <Divider/>
         </>
     )

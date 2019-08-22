@@ -7,6 +7,7 @@ import requestLists from './request-list';
 import request from './request';
 import requestEnvelope from './request-envelope';
 import user from './user';
+import skill from './skill';
 
 export default combineReducers({
     app,
@@ -16,5 +17,6 @@ export default combineReducers({
     resources,
     request,
     requestEnvelope,
-    user
+    skill,
+    user,
 })

@@ -7,7 +7,6 @@ function mapStateToProps(state){
     const approverOptions = []
     if(state.request.approverOptions.length != 0){
             state.request.approverOptions.map((option) =>{
-                console.log(option)
             approverOptions.push({
                 key:option.id,
                 text: option.firstName +' '+ option.lastName,
@@ -47,9 +46,7 @@ function mapDispatchToProps(dispatch) {
             dispatch(initializeRequest(requestedBy))
         },
         createNewRequest: (newRequestObject, requestUser) => {
-            console.log('here')
-            console.log(newRequestObject, requestUser)
-                dispatch(createNewRequest(newRequestObject, requestUser))
+            dispatch(createNewRequest(newRequestObject, requestUser))
         },
         handleChange: (event, {name, value}) => {
             dispatch(handleChange(name, value))

@@ -1,65 +1,57 @@
 import API, {Repository} from '.';
 import ResourceRequests from './resource-requests';
+import Skills from './skills';
+import Locations from './locations';
 
 class RequestEnvelopeRepository extends Repository {
     async post(data, config={headers:{'Content-Type': 'application/json'}}){
-        console.log('look here ya fuck', data)
         try{
             const response = await API.post(this.url, data.baseRequest, config);
-            console.log("HERES THE RESPONSE:", response);
-                console.log(response.data.id);
+
+
+            const locationPref = {
+                city: data.locationCityPref,
+                country: data.locationCountryPref,
+                stateOrProvince: data.locationStatePref,
+            }
+
+            const locationResponse = await API.post(`${Locations.getPath()}/`, locationPref, {headers:{'Content-Type': 'application/json'}})
+            console.log("LOCATION RESPONSE", locationResponse)
+
                 const requestPath = `${this.getPath()}/${response.data.id}/`
-                console.log("REQUEST PATH: " , requestPath);
                 const requestEnvelope ={
                     requestStatus: `${requestPath}requestStatuses/1`, //neeed to be defaulted upon creation
                     interviewer: `${requestPath}interviewer/${data.interviewers[0]}`, //needs to be changed to accept an array
                     requester: `${requestPath}requester/${data.requester}`,
                     proposalType: `${requestPath}proposalType/1`, //hard coded until internal or external is implemented
-                    locationPreference: `${requestPath}locationPreference/1` //hard coded for now need changed to accept string
+                    locationPreference: `${requestPath}locationPreference/${locationResponse.data.id}`
                 }
                 const response2 = await API.patch(`${requestPath}`, requestEnvelope, {...config, headers:{'Content-Type': 'application/json'}})
-                console.log(response2);
+                console.log(response2)
 
-
-
-                // console.log("CHECK ME IF RIGHT", `${ResourceRequests.getPath()}/`);
-
-                // const resourceRequestObject = data.resource.map(resource => {
-
-                // })
-
-                const testObject = {
+                const resourceRequest = {
                     count: data.resources[0].number,
                     hourlyRate: data.resources[0].compensation,
                     yearsOfExperience: data.resources[0].experience,
                     requestEnvelopeId: response.data.id,
                 }
 
-                const resourceRequestResponse = await API.post(`${ResourceRequests.getPath()}/`, testObject, {headers:{'Content-Type': 'application/json'}})
-                console.log(resourceRequestResponse);
-                // const uriList = data.resources.map(resource => 
-                //     `${requestPath}/${resource.id}`)
-                // const resourceRequestResponse = await API.post(`${requestPath}/`)
+                const resourceRequestResponse = await API.post(`${ResourceRequests.getPath()}/`, resourceRequest, {headers:{'Content-Type': 'application/json'}})
+                console.log("resource request response",resourceRequestResponse)
 
+                const skillUriList = data.resources[0].skills.map(skill =>
+                    `${Skills.getPath()}/${skill}`)
 
-
-
-                // console.log(requestPath)
-                // const response2 = await API.put(`${requestPath}requestStatus`, `${requestPath}requestStatuses/1`, {...config, headers:{'Content-Type': 'text/uri-list'}}) //neeed to be defaulted upon creation
-                // console.log(response2)
-                // const response3 = await API.put(`${requestPath}interviewer`, `${requestPath}interviewer/${data.interviewers[0]}`, {...config, headers:{'Content-Type': 'text/uri-list'}}) //needs to be changed to accept an array
-                // console.log(response3)
-                // const response4 = await API.put(`${requestPath}requester`, `${requestPath}requester/${data.requester}`, {...config, headers:{'Content-Type': 'text/uri-list'}})
-                // console.log(response4)
-                // const response5 = await API.put(`${requestPath}proposalType`, `${requestPath}proposalType/1`, {...config, headers:{'Content-Type': 'text/uri-list'}}) //hard coded until internal or external is implemented
-                // console.log(response5)
-                // const response6 = await API.put(`${requestPath}locationPreference`, `${requestPath}locationPreference/1`, {...config, headers:{'Content-Type': 'text/uri-list'}}) //hard coded for now need changed to accept string
-                // console.log(response6)
-                // const uriList = data.resources.map(resource =>{
-                //     requestPath
-                // })
+                const skillsResponse = await API.put(`${ResourceRequests.getPath()}/${resourceRequestResponse.data.id}/skills`, 
+                skillUriList.join('\n'),
+                {
+                    headers: {
+                        'Content-Type': 'text/uri-list'
+                    }
+                });
+                console.log(skillsResponse)
         }catch(e){
-
+            console.error(e)
         }
     }
     

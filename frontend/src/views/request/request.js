@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {Form, Grid, Button, Message} from 'semantic-ui-react';
+import React, { useState, useEffect } from 'react';
+import { Form, Grid, Button, Message } from 'semantic-ui-react';
 import ResourceForm from './resourceForm-connector';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const RequestForm = (props) => {
     const [interviewersError, setInterviewersError] = useState(false);
@@ -13,17 +13,17 @@ const RequestForm = (props) => {
     const [locationPrefError, setLocationPrefError] = useState(false);
     const [resourcesError, setResourcesError] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         props.initializeRequest(props.currentUser)
         props.fetchApprovers("APPROVER");
         props.fetchInterviewers("INTERVIEWER");
-    },[])
-    
-    const {requestedBy, requestDate, interviewers, approvers, businessCase, clientName, team, manager, locationPref, requestedResources, comments} = props.request;
-    
+    }, [])
+
+    const { requestedBy, requestDate, interviewers, approvers, businessCase, clientName, team, manager, locationCityPref, locationStatePref, locationCountryPref, requestedResources, comments } = props.request;
+
     const addResourceRequest = () => {
-        return( 
+        return (
             setResourcesError(false),
             props.addResourceRequest()
         )
@@ -36,10 +36,11 @@ const RequestForm = (props) => {
         validateString(clientName, setClientNameError);
         validateString(team, setTeamError);
         validateString(manager, setManagerError);
-        validateString(locationPref, setLocationPrefError);
-        console.log('look here', props.request)
-        if(!interviewersError|| !approversError || !businessCaseError || !clientNameError || !teamError || !managerError || !locationPrefError || !resourcesError){
-                return props.createNewRequest(props.request, props.user)
+        validateString(locationCityPref, setLocationPrefError);
+        validateString(locationStatePref, setLocationPrefError);
+        validateString(locationCountryPref, setLocationPrefError);
+        if (!interviewersError || !approversError || !businessCaseError || !clientNameError || !teamError || !managerError || !locationPrefError || !resourcesError) {
+            return props.createNewRequest(props.request, props.user)
         }
 
     }
@@ -49,130 +50,150 @@ const RequestForm = (props) => {
     }
 
     const validateArray = (array, callback) => {
-        return array.length === 0 ? callback(true): callback(false)
+        return array.length === 0 ? callback(true) : callback(false)
     }
 
-    const resources = requestedResources.map((resource)=>{
-        return <ResourceForm key={resource.index} id={resource.index}/>
+    const resources = requestedResources.map((resource) => {
+        return <ResourceForm key={resource.index} id={resource.index} />
     })
 
-        return(
-            <Grid columns='16' centered>
-                <Grid.Column width='10'>
+    return (
+        <Grid columns='16' centered>
+            <Grid.Column width='10'>
                 <Form error={resourcesError}>
                     <Form.Group widths='equal'>
-                            <Form.Input 
-                            fluid 
-                            type='text' 
-                            label='Requested By' 
-                            placeholder='Requested By' 
-                            value={requestedBy} 
+                        <Form.Input
+                            fluid
+                            type='text'
+                            label='Requested By'
+                            placeholder='Requested By'
+                            value={requestedBy}
                             readOnly
-                            />
-                            <Form.Input 
-                            fluid 
-                            type='text' 
-                            label='Requested Date' 
-                            placeholder='Requested Date' 
-                            value={requestDate} 
+                        />
+                        <Form.Input
+                            fluid
+                            type='text'
+                            label='Requested Date'
+                            placeholder='Requested Date'
+                            value={requestDate}
                             readOnly
-                            />
+                        />
                     </Form.Group>
                     <Form.Group widths='equal'>
-                        <Form.Dropdown 
-                        fluid 
-                        multiple selection 
-                        label='Interviewer' 
-                        options={props.interviewerOptions} 
-                        name='interviewers'  
-                        placeholder='Select' 
-                        onChange={props.handleChange} 
-                        onBlur={()=> validateArray(interviewers, setInterviewersError)} 
-                        error={interviewersError}
+                        <Form.Dropdown
+                            fluid
+                            multiple selection
+                            label='Interviewer'
+                            options={props.interviewerOptions}
+                            name='interviewers'
+                            placeholder='Select'
+                            onChange={props.handleChange}
+                            onBlur={() => validateArray(interviewers, setInterviewersError)}
+                            error={interviewersError}
                         />
-                        <Form.Dropdown 
-                        fluid 
-                        multiple selection 
-                        label='Approvers' 
-                        options={props.approverOptions} 
-                        name='approvers' 
-                        placeholder='Select' 
-                        onChange={props.handleChange} 
-                        onBlur={()=> validateArray(approvers, setApproversError)} 
-                        error={approversError}
+                        <Form.Dropdown
+                            fluid
+                            multiple selection
+                            label='Approvers'
+                            options={props.approverOptions}
+                            name='approvers'
+                            placeholder='Select'
+                            onChange={props.handleChange}
+                            onBlur={() => validateArray(approvers, setApproversError)}
+                            error={approversError}
                         />
                     </Form.Group>
-                        <Form.TextArea 
-                        label='Business Case' 
-                        placeholder='Describe Business Case' 
-                        rows='6' name='businessCase' 
-                        value={businessCase} 
-                        onChange={props.handleChange} 
-                        onBlur={() => validateString(businessCase, setBusinessCaseError)} 
+                    <Form.TextArea
+                        label='Business Case'
+                        placeholder='Describe Business Case'
+                        rows='6' name='businessCase'
+                        value={businessCase}
+                        onChange={props.handleChange}
+                        onBlur={() => validateString(businessCase, setBusinessCaseError)}
                         error={businessCaseError}
-                        />
+                    />
                     <h4>Client Info</h4>
                     <Form.Group widths='equal'>
-                        <Form.Input 
-                        fluid 
-                        label='Client Name' 
-                        placeholder='Client Name' 
-                        value={clientName} 
-                        name='clientName' 
-                        onChange={props.handleChange} 
-                        onBlur={() => validateString(clientName, setClientNameError)} 
-                        error={clientNameError}
+                        <Form.Input
+                            fluid
+                            label='Client Name'
+                            placeholder='Client Name'
+                            value={clientName}
+                            name='clientName'
+                            onChange={props.handleChange}
+                            onBlur={() => validateString(clientName, setClientNameError)}
+                            error={clientNameError}
                         />
-                        <Form.Input 
-                        fluid 
-                        label='Team' 
-                        placeholder='Team' 
-                        name='team' 
-                        value={team} 
-                        onChange={props.handleChange} 
-                        onBlur={() => validateString(team, setTeamError)} 
-                        error={teamError}
+                        <Form.Input
+                            fluid
+                            label='Team'
+                            placeholder='Team'
+                            name='team'
+                            value={team}
+                            onChange={props.handleChange}
+                            onBlur={() => validateString(team, setTeamError)}
+                            error={teamError}
                         />
-                        <Form.Input 
-                        fluid 
-                        label='Manager' 
-                        placeholder='Manager' 
-                        value={manager} 
-                        name='manager' 
-                        onChange={props.handleChange} 
-                        onBlur={() => validateString(manager, setManagerError)} 
-                        error={managerError}
+                        <Form.Input
+                            fluid
+                            label='Manager'
+                            placeholder='Manager'
+                            value={manager}
+                            name='manager'
+                            onChange={props.handleChange}
+                            onBlur={() => validateString(manager, setManagerError)}
+                            error={managerError}
                         />
                     </Form.Group>
                     <Form.Group>
-                        <Form.Input 
-                        fluid 
-                        label='Location Preference' 
-                        placeholder='Location' 
-                        name='locationPref' 
-                        value={locationPref} 
-                        onChange={props.handleChange} 
-                        onBlur={() => validateString(locationPref, setLocationPrefError)} 
-                        error={locationPrefError}
+                        <Form.Input
+                            fluid
+                            label='City Preference'
+                            placeholder='City'
+                            name='locationCityPref'
+                            value={locationCityPref}
+                            onChange={props.handleChange}
+                            onBlur={() => validateString(locationCityPref, setLocationPrefError)}
+                            error={locationPrefError}
+                        />
+                        <Form.Input
+                            fluid
+                            label='State Preference'
+                            placeholder='State'
+                            name='locationStatePref'
+                            value={locationStatePref}
+                            onChange={props.handleChange}
+                            onBlur={() => validateString(locationStatePref, setLocationPrefError)}
+                            error={locationPrefError}
+                        />
+                        <Form.Input
+                            fluid
+                            label='Country Preference'
+                            placeholder='Country'
+                            name='locationCountryPref'
+                            value={locationCountryPref}
+                            onChange={props.handleChange}
+                            onBlur={() => validateString(locationCountryPref, setLocationPrefError)}
+                            error={locationPrefError}
                         />
                     </Form.Group>
-                        <Button 
-                        icon='add' 
-                        label='Add Resource' 
+                    <Button
+                        icon='add'
+                        label='Add Resource'
                         onClick={addResourceRequest}
-                        />
-                            <Message
-                            error
-                            header='Action Forbidden'
-                            content='Please Add Required Resources'
-                            />
+                    />
+                    <Message
+                        error
+                        header='Action Forbidden'
+                        content='Please Add Required Resources'
+                    />
                     {resources}
-                    <Form.TextArea label='Comments' placeholder='Enter Comment'/>
-                        <Form.Button onClick={validateResources}>Submit</Form.Button>
+                    <Form.TextArea label='Comments' placeholder='Enter Comment' />
+                    <Form.Button onClick={validateResources}>Submit</Form.Button>
                 </Form>
-                </Grid.Column>
-            </Grid>
-        );
+            </Grid.Column>
+        </Grid>
+    );
 };
 
 export default RequestForm;
