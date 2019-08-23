@@ -1,7 +1,6 @@
 import {connect} from 'react-redux';
 import request from './request';
-import {addNewResource, handleChange, createNewRequest, initializeRequest, fetchApprovers, fetchInterviewers} from '../../action-creators/request';
-import { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } from 'constants';
+import {addNewResource, handleChange, createNewRequest, initializeRequest, fetchApprovers, fetchInterviewers, clearRequest} from '../../action-creators/request';
 
 function mapStateToProps(state){
     const approverOptions = []
@@ -56,6 +55,9 @@ function mapDispatchToProps(dispatch) {
         },
         fetchInterviewers: (role) => {
             dispatch(fetchInterviewers(role));
+        },
+        clearRequest: () => {
+            dispatch(clearRequest())
         }
 
     }

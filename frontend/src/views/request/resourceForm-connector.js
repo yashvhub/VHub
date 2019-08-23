@@ -5,7 +5,7 @@ import {fetchSkills} from '../../action-creators/skills';
 
 function mapStateToProps(state, ownProps){
     const skillsOptions = []
-    if(state.skill.skills.length != 0){
+    if(state.skill.skills.length !== 0){
             state.skill.skills.map((skill) =>{
             skillsOptions.push({
                 key:skill.id,

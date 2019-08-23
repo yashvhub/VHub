@@ -16,7 +16,6 @@ class RequestEnvelopeRepository extends Repository {
             }
 
             const locationResponse = await API.post(`${Locations.getPath()}/`, locationPref, {headers:{'Content-Type': 'application/json'}})
-            console.log("LOCATION RESPONSE", locationResponse)
 
                 const requestPath = `${this.getPath()}/${response.data.id}/`
 
@@ -30,8 +29,6 @@ class RequestEnvelopeRepository extends Repository {
                         'Content-Type': 'text/uri-list'
                     }
                 });
-                console.log(approverResponse)
-
 
                 const interviewersUriList =  data.interviewers.map(interviewer =>
                     `${Users.getPath()}/${interviewer}`)
@@ -44,9 +41,6 @@ class RequestEnvelopeRepository extends Repository {
                     }
                 });
 
-                console.log(interviewersResponse)
-
-
                 const requestEnvelope ={
                     requestStatus: `${requestPath}requestStatuses/1`, //neeed to be defaulted upon creation
                     requester: `${requestPath}requester/${data.requester}`,
@@ -54,29 +48,31 @@ class RequestEnvelopeRepository extends Repository {
                     locationPreference: `${requestPath}locationPreference/${locationResponse.data.id}`
                 }
                 const response2 = await API.patch(`${requestPath}`, requestEnvelope, {...config, headers:{'Content-Type': 'application/json'}})
-                console.log(response2)
-
-                const resourceRequest = {
-                    count: data.resources[0].number,
-                    hourlyRate: data.resources[0].compensation,
-                    yearsOfExperience: data.resources[0].experience,
-                    requestEnvelopeId: response.data.id,
+                data.resources.map(async (resource)=>{
+                    let resourceRequest = {
+                        count: resource.number,
+                        hourlyRate: resource.compensation,
+                        yearsOfExperience: resource.experience,
+                        requestEnvelopeId: response.data.id,
+                    }
+                    const resourceRequestResponse = await API.post(`${ResourceRequests.getPath()}/`, resourceRequest, {headers:{'Content-Type': 'application/json'}})
+                    
+                    const skillUriList = resource.skills.map(skill =>
+                        `${Skills.getPath()}/${skill}`)
+    
+                    const skillsResponse = await API.put(`${ResourceRequests.getPath()}/${resourceRequestResponse.data.id}/skills`, 
+                    skillUriList.join('\n'),
+                    {
+                        headers: {
+                            'Content-Type': 'text/uri-list'
+                        }
+                    });
+                })
+                if(response, response2, interviewersResponse, approverResponse, locationResponse){
+                    return{success:true}
                 }
 
-                const resourceRequestResponse = await API.post(`${ResourceRequests.getPath()}/`, resourceRequest, {headers:{'Content-Type': 'application/json'}})
-                console.log("resource request response",resourceRequestResponse)
 
-                const skillUriList = data.resources[0].skills.map(skill =>
-                    `${Skills.getPath()}/${skill}`)
-
-                const skillsResponse = await API.put(`${ResourceRequests.getPath()}/${resourceRequestResponse.data.id}/skills`, 
-                skillUriList.join('\n'),
-                {
-                    headers: {
-                        'Content-Type': 'text/uri-list'
-                    }
-                });
-                console.log(skillsResponse)
         }catch(e){
             console.error(e)
         }

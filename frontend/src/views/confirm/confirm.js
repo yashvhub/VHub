@@ -5,7 +5,6 @@ import ConfirmTable from './confirmTable';
 
 class ConfirmPage extends React.Component{
     constructor(props){
-        console.log(props)
         super(props)
 
         this.state = {

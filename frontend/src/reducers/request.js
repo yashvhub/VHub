@@ -1,4 +1,16 @@
-import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST,REMOVE_SKILL, REQUEST_ERROR, EDIT_RESOURCE, REQUEST_USERS, RECEIVE_INTERVIEWERS, RECEIVE_APPROVERS, HAS_ERROR_USERS,} from "../action-creators/actions";
+import {
+    ADD_NEW_RESOURCE, 
+    ADD_NEW_RESOURCE_SKILL, 
+    REQUEST_HANDLECHANGE, 
+    INTIALIZE_REQUEST,REMOVE_SKILL, 
+    EDIT_RESOURCE, 
+    REQUEST_USERS, 
+    RECEIVE_INTERVIEWERS, 
+    RECEIVE_APPROVERS, 
+    HAS_ERROR_USERS, 
+    CLEAR_REQUEST, 
+    SUBMIT_SUCCESS
+} from "../action-creators/actions";
 
 function blankState(){
     return {
@@ -11,21 +23,25 @@ function blankState(){
         clientName: '',
         team: '',
         manager: '',
-        locationPref: '',
         comments: [],
         requestedResources: [],
         approverOptions:[],
         interviewerOptions:[],
-        formSubmitError: false
+        locationCityPref: '',
+        locationStatePref: '',
+        locationCountryPref: '',
+        submitSuccess: false
     }
 }
 
-function error(state){
+function submitSuccess(state){
     return{
-        ...state,
-        formSubmitError:true
+       ...state,
+        submitSuccess: true
     }
 }
+
+
 
 function initializeRequest(state, action){
     const today = new Date();
@@ -55,7 +71,6 @@ function addNewResource(state) {
 }
 
 function editResource(state, action){
-    console.log(action)
     const field = action.field;
     const value = action.value
     return{
@@ -155,8 +170,9 @@ export default function (state = blankState(), action) {
         [RECEIVE_INTERVIEWERS]: receiveInterviewers,
         [HAS_ERROR_USERS]: invalidateUsers,
         [REMOVE_SKILL]: removeSkill,
-        [REQUEST_ERROR]: error,
-        [EDIT_RESOURCE]: editResource
+        [EDIT_RESOURCE]: editResource,
+        [CLEAR_REQUEST]: blankState,
+        [SUBMIT_SUCCESS]: submitSuccess
     };
 
     const reducer = actionHandlers[action.type];

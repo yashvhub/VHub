@@ -1,4 +1,17 @@
-import {ADD_NEW_RESOURCE, ADD_NEW_RESOURCE_SKILL, REQUEST_HANDLECHANGE, INTIALIZE_REQUEST,REMOVE_SKILL, REQUEST_ERROR, EDIT_RESOURCE, REQUEST_USERS, RECEIVE_APPROVERS, RECEIVE_INTERVIEWERS, HAS_ERROR_USERS} from "./actions";
+import {
+    ADD_NEW_RESOURCE, 
+    ADD_NEW_RESOURCE_SKILL, 
+    REQUEST_HANDLECHANGE, 
+    INTIALIZE_REQUEST,
+    REMOVE_SKILL, 
+    EDIT_RESOURCE, 
+    REQUEST_USERS, 
+    RECEIVE_APPROVERS, 
+    RECEIVE_INTERVIEWERS, 
+    HAS_ERROR_USERS, 
+    CLEAR_REQUEST,
+    SUBMIT_SUCCESS
+} from "./actions";
 import RequestEnvelops from '../API/request-envelopes';
 import Users from "../API/users";
 
@@ -9,9 +22,9 @@ export function initializeRequest(currentUser) {
     }
 }
 
-export function setError(){
+export function clearRequest(){
     return{
-        type: REQUEST_ERROR
+        type: CLEAR_REQUEST
     }
 }
 
@@ -72,12 +85,23 @@ export function createNewRequest(newRequestObject, requestUser) {
 
     }
 
-    return async () =>{ 
+    return async (dispatch) =>{ 
         try {
             let response = await RequestEnvelops.post(dataObject)
+            if(response.success){
+                dispatch(clearRequest())
+                dispatch(submitSuccess())
+                
+            }
         } catch(e){
             console.error(e)
         }
+    }
+}
+
+export function submitSuccess(){
+    return{
+        type: SUBMIT_SUCCESS
     }
 }
 

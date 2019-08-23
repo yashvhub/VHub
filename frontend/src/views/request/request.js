@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Grid, Button, Message } from 'semantic-ui-react';
 import ResourceForm from './resourceForm-connector';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import { equal } from 'assert';
 
 const RequestForm = (props) => {
     const [interviewersError, setInterviewersError] = useState(false);
@@ -12,15 +13,15 @@ const RequestForm = (props) => {
     const [managerError, setManagerError] = useState(false);
     const [locationPrefError, setLocationPrefError] = useState(false);
     const [resourcesError, setResourcesError] = useState(false);
-    const [submitSuccess, setSubmitSuccess] = useState(false);
 
     useEffect(() => {
+        props.clearRequest()
         props.initializeRequest(props.currentUser)
         props.fetchApprovers("APPROVER");
         props.fetchInterviewers("INTERVIEWER");
     }, [])
 
-    const { requestedBy, requestDate, interviewers, approvers, businessCase, clientName, team, manager, locationCityPref, locationStatePref, locationCountryPref, requestedResources, comments } = props.request;
+    const { requestedBy, requestDate, interviewers, approvers, businessCase, clientName, team, manager, locationCityPref, locationStatePref, locationCountryPref, requestedResources, comments, submitSuccess } = props.request;
 
     const addResourceRequest = () => {
         return (
@@ -40,7 +41,8 @@ const RequestForm = (props) => {
         validateString(locationStatePref, setLocationPrefError);
         validateString(locationCountryPref, setLocationPrefError);
         if (!interviewersError || !approversError || !businessCaseError || !clientNameError || !teamError || !managerError || !locationPrefError || !resourcesError) {
-            return props.createNewRequest(props.request, props.user)
+            props.createNewRequest(props.request, props.user)
+            
         }
 
     }
@@ -58,6 +60,7 @@ const RequestForm = (props) => {
     })
 
     return (
+        submitSuccess ? <Redirect to={'/'}/> :
         <Grid columns='16' centered>
             <Grid.Column width='10'>
                 <Form error={resourcesError}>
@@ -106,7 +109,8 @@ const RequestForm = (props) => {
                     <Form.TextArea
                         label='Business Case'
                         placeholder='Describe Business Case'
-                        rows='6' name='businessCase'
+                        rows='6' 
+                        name='businessCase'
                         value={businessCase}
                         onChange={props.handleChange}
                         onBlur={() => validateString(businessCase, setBusinessCaseError)}
@@ -145,7 +149,7 @@ const RequestForm = (props) => {
                             error={managerError}
                         />
                     </Form.Group>
-                    <Form.Group>
+                    <Form.Group widths='equal'>
                         <Form.Input
                             fluid
                             label='City Preference'

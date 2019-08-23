@@ -5,12 +5,10 @@ import { Redirect } from 'react-router-dom';
 import { Message } from 'semantic-ui-react';
 
 function LoginPage(props){
-    console.log(props)
     const email = sessionStorage.getItem('email');
     const password = sessionStorage.getItem('password');
     const token = sessionStorage.getItem('token');
     const error = props.error
-    console.log(email,password,token)
     const status = error ? ('statusText' in error) ? `${error.status}: ${error.statusText}` : error.status : undefined;
     const loginStoredUser = () => {if(email && token && password && !props.isPending){
             props.doLogin(email, password)

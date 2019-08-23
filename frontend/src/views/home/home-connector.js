@@ -3,7 +3,8 @@ import home from './home';
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user
+        user: state.user,
+        submitSuccess: state.request.submitSuccess
     }
 }
 
