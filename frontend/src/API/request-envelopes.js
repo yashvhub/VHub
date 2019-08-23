@@ -30,10 +30,25 @@ class RequestEnvelopeRepository extends Repository {
                         'Content-Type': 'text/uri-list'
                     }
                 });
+                console.log(approverResponse)
+
+
+                const interviewersUriList =  data.interviewers.map(interviewer =>
+                    `${Users.getPath()}/${interviewer}`)
+
+                const interviewersResponse = API.put(`${requestPath}/interviewers`, 
+                interviewersUriList.join('\n'),
+                {
+                    headers: {
+                        'Content-Type': 'text/uri-list'
+                    }
+                });
+
+                console.log(interviewersResponse)
+
 
                 const requestEnvelope ={
                     requestStatus: `${requestPath}requestStatuses/1`, //neeed to be defaulted upon creation
-                    interviewer: `${requestPath}interviewer/${data.interviewers[0]}`, //needs to be changed to accept an array
                     requester: `${requestPath}requester/${data.requester}`,
                     proposalType: `${requestPath}proposalType/1`, //hard coded until internal or external is implemented
                     locationPreference: `${requestPath}locationPreference/${locationResponse.data.id}`

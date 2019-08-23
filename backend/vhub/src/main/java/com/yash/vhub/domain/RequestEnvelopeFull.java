@@ -13,7 +13,6 @@ import org.springframework.data.rest.core.config.Projection;
 public interface RequestEnvelopeFull {
 	long getId();
 	User getRequester();
-	User getInterviewer();
 	RequestStatus getRequestStatus();
 	JobPosting getJobPosting();
 	Location getLocationPreference();

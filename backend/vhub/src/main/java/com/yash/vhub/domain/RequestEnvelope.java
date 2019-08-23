@@ -37,10 +37,12 @@ public class RequestEnvelope {
 	@JoinColumn(name="requester_id")
 	private User requester;
 	
-	@Nullable
-	@ManyToOne
-	@JoinColumn(name="interviewer_id")
-	private User interviewer;
+	
+	
+//	@Nullable
+//	@ManyToOne
+//	@JoinColumn(name="interviewer_id")
+//	private User interviewer;
 	
 	@ManyToOne
 	@JoinColumn(name="request_status_id")
@@ -79,6 +81,14 @@ public class RequestEnvelope {
 	@OneToMany
 	@JoinColumn(name="request_envelope_id")
 	Set<RequestComment> requestComments = new HashSet<>();
+	
+	@ManyToMany
+	@JoinTable(
+			name="request_envelope_interviewers_jt",
+			joinColumns = {@JoinColumn(name="request_envelope_id")},
+			inverseJoinColumns = {@JoinColumn(name="user_id")}
+			)
+	private Set<User> interviewers = new HashSet<>();
 	
 	@ManyToMany
 	@JoinTable(
