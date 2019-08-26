@@ -37,13 +37,6 @@ public class RequestEnvelope {
 	@JoinColumn(name="requester_id")
 	private User requester;
 	
-	
-	
-//	@Nullable
-//	@ManyToOne
-//	@JoinColumn(name="interviewer_id")
-//	private User interviewer;
-	
 	@ManyToOne
 	@JoinColumn(name="request_status_id")
 	private RequestStatus requestStatus;
@@ -79,7 +72,7 @@ public class RequestEnvelope {
 	Set<ResourceRequest> resourceRequests = new HashSet<>();
 	
 	@OneToMany
-	@JoinColumn(name="request_envelope_id")
+	@JoinColumn(name="request_id")
 	Set<RequestComment> requestComments = new HashSet<>();
 	
 	@ManyToMany

@@ -31,7 +31,8 @@ function mapStateToProps(state){
         user: state.user,
         currentUser,
         approverOptions,
-        interviewerOptions
+        interviewerOptions,
+        comments: state.comments,
     }
     
 }

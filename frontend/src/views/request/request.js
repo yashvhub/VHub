@@ -192,7 +192,12 @@ const RequestForm = (props) => {
                         content='Please Add Required Resources'
                     />
                     {resources}
-                    <Form.TextArea label='Comments' placeholder='Enter Comment' />
+                    <Form.TextArea 
+                        label='Comments' 
+                        placeholder='Enter Comment' 
+                        name='comments' 
+                        onChange={props.handleChange}
+                        value={comments}/>
                     <Form.Button onClick={validateResources}>Submit</Form.Button>
                 </Form>
             </Grid.Column>

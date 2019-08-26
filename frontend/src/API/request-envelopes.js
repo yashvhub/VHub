@@ -3,10 +3,12 @@ import ResourceRequests from './resource-requests';
 import Skills from './skills';
 import Locations from './locations';
 import Users from './users';
+import Comments from './request-comments'
 
 class RequestEnvelopeRepository extends Repository {
     async post(data, config={headers:{'Content-Type': 'application/json'}}){
         try{
+            console.log("here's the data you fuck", data)
             const response = await API.post(this.url, data.baseRequest, config);
 
             const locationPref = {
@@ -68,12 +70,43 @@ class RequestEnvelopeRepository extends Repository {
                         }
                     });
                 })
-                if(response, response2, interviewersResponse, approverResponse, locationResponse){
-                    return{success:true}
-                }
-
-
-        }catch(e){
+                
+                
+                const skillUriList = data.resources[0].skills.map(skill =>
+                    `${Skills.getPath()}/${skill}`)
+                    
+                    const skillsResponse = await API.put(`${ResourceRequests.getPath()}/${resourceRequestResponse.data.id}/skills`, 
+                    skillUriList.join('\n'),
+                    {
+                        headers: {
+                            'Content-Type': 'text/uri-list'
+                        }
+                    });
+                    console.log(skillsResponse)
+                    
+                    
+                    let today = new Date()
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const yyyy = today.getFullYear();
+                    
+                    today = yyyy + '-' + mm + '-' + dd;
+                    
+                    const comment = {
+                        requestId: response.data.id,
+                        author: `${requestPath}requester/${data.requester}`,
+                        comment: data.comments,
+                        createdAt: today,
+                    }
+                    
+                    const commentResponse = await API.post(`${Comments.getPath()}/`, comment, {headers:{'Content-Type': 'application/json'}})
+                    console.log("comment response",commentResponse)
+                    
+                    if(response, response2, interviewersResponse, approverResponse, locationResponse){
+                        return{success:true}
+                    }
+                    
+                }catch(e){
             console.error(e)
         }
     }

@@ -1,5 +1,6 @@
 import RequestEnvelopes from "../API/request-envelopes";
-import { REQUEST_REQUEST_ENVELOPE, RECEIVE_REQUEST_ENVELOPE, RECEIVE_PROPOSAL_REQUEST_ENVELOPE, INVALIDATE_REQUEST_ENVELOPE} from "./actions";
+import RequestComments from "../API/request-comments";
+import { REQUEST_REQUEST_ENVELOPE, RECEIVE_REQUEST_ENVELOPE, RECEIVE_PROPOSAL_REQUEST_ENVELOPE, INVALIDATE_REQUEST_ENVELOPE } from "./actions";
 
 export function requestRequestEnvelope() {
     return {
@@ -28,12 +29,12 @@ export function invalidateRequestEnvelope() {
 }
 
 
-export function fetchRequestEnvelope(id, projection="FullRequestEnvelope") {
-    return async function(dispatch, getState) {
+export function fetchRequestEnvelope(id, projection = "FullRequestEnvelope") {
+    return async function (dispatch, getState) {
         try {
             dispatch(requestRequestEnvelope())
-            const [response, status] = await RequestEnvelopes.get(id, {params: {projection}});
-            if(response && !getState().requestEnvelope.didInvalidate){
+            const [response, status] = await RequestEnvelopes.get(id, { params: { projection } });
+            if (response && !getState().requestEnvelope.didInvalidate) {
                 dispatch(receiveRequestEnvelope(response.data));
             } else {
                 dispatch(invalidateRequestEnvelope());
@@ -46,11 +47,11 @@ export function fetchRequestEnvelope(id, projection="FullRequestEnvelope") {
 }
 
 export function fetchProposalRequestEnvelope(id, projection) {
-    return async function(dispatch,getState) {
+    return async function (dispatch, getState) {
         try {
             dispatch(requestRequestEnvelope())
-            const [response, status] = await RequestEnvelopes.get(id, {params: {projection}});
-            if(response && !getState().requestEnvelope.didInvalidate){
+            const [response, status] = await RequestEnvelopes.get(id, { params: { projection } });
+            if (response && !getState().requestEnvelope.didInvalidate) {
                 dispatch(receiveProposalRequestEnvelope(response.data));
             } else {
                 dispatch(invalidateRequestEnvelope());
@@ -62,19 +63,43 @@ export function fetchProposalRequestEnvelope(id, projection) {
     }
 }
 
-export function approveRequestEnvelope(requestEnvelope){
-    return async function(dispatch,getState){
+export function approveRequestEnvelope(requestEnvelope) {
+    return async function (dispatch, getState) {
         try {
             dispatch(requestRequestEnvelope());
-        const [response, status] = await RequestEnvelopes.approvePatch(requestEnvelope, requestEnvelope.id , {});
-        if(response && !getState().requestEnvelope.didInvalidate){
-            dispatch(receiveRequestEnvelope(response.data));
-        } else{
-            dispatch(invalidateRequestEnvelope())
+            const [response, status] = await RequestEnvelopes.approvePatch(requestEnvelope, requestEnvelope.id, {});
+            if (response && !getState().requestEnvelope.didInvalidate) {
+                dispatch(receiveRequestEnvelope(response.data));
+            } else {
+                dispatch(invalidateRequestEnvelope())
+            }
+        } catch (e) {
+            dispatch(invalidateRequestEnvelope());
+            console.error(e);
         }
-    } catch(e) {
-        dispatch(invalidateRequestEnvelope());
-        console.error(e);
     }
 }
+
+
+export function postComment(comment, requestEnvelopeId) {
+
+    const commentObject = {
+        comment: comment,
+        requestId: requestEnvelopeId,
+    }
+
+    return async function (dispatch, getState) {
+        try {
+            dispatch(requestRequestEnvelope());
+            const [response, status] = await RequestComments.post(commentObject, {});
+            if (response && !getState().requestEnvelope.didInvalidate) {
+                dispatch(receiveRequestEnvelope(response.data));
+            } else {
+                dispatch(invalidateRequestEnvelope())
+            }
+        } catch (e) {
+            dispatch(invalidateRequestEnvelope());
+            console.error(e);
+        }
+    }
 }

@@ -82,6 +82,7 @@ export function createNewRequest(newRequestObject, requestUser) {
         locationCityPref: newRequestObject.locationCityPref,
         locationStatePref: newRequestObject.locationStatePref,
         locationCountryPref: newRequestObject.locationCountryPref,
+        comments: newRequestObject.comments,
 
     }
 

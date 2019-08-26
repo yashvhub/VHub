@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,6 +21,7 @@ public class CompositeRequestCommentId implements Serializable {
 	 */
 	private static final long serialVersionUID = 3343563873190640476L;
 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id", insertable=true)
 	private long id;
 	

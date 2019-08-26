@@ -5,6 +5,9 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -19,8 +22,15 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor
 public class RequestComment {
 
-	@EmbeddedId
-	private CompositeRequestCommentId id;
+//	@EmbeddedId
+//	private CompositeRequestCommentId id;
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private long id;
+	
+	@Column(name="request_id")
+	private long requestId;
 	
 	@ManyToOne
 	@JoinColumn(name="author_id")

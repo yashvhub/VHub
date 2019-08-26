@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Comment, Header, Checkbox, Button, Form } from 'semantic-ui-react';
 
-const Comments = ({ commentBlock }) => {
+const Comments = ({ commentBlock, commentClick}) => {
     const [collapsed, setCollapsed] = useState(true);
     const handleCheckbox = (e, { checked }) => setCollapsed(!collapsed);
     let sortedComments = commentBlock.sort((a,b) => {
@@ -10,7 +10,6 @@ const Comments = ({ commentBlock }) => {
 
     return (
         <>
-
             <Checkbox defaultChecked label='Collapse comments' value={collapsed} onChange={handleCheckbox} />
             <Comment.Group collapsed={collapsed} threaded>
                 <Header as='h3' dividing>
@@ -31,7 +30,7 @@ const Comments = ({ commentBlock }) => {
 
                 <Form reply>
                     <Form.TextArea />
-                    <Button content='Add Reply' labelPosition='left' icon='edit' primary />
+                    <Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={commentClick}/>
                 </Form>
 
             </Comment.Group>

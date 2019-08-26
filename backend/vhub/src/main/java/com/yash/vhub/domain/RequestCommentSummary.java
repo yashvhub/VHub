@@ -10,7 +10,7 @@ import org.springframework.data.rest.core.config.Projection;
 				RequestComment.class
 		})
 public interface RequestCommentSummary {
-	CompositeRequestCommentId getId();
+	Long getId();
 	User getAuthor();	
 	Date getCreatedAt();
 	Date getLastUpdated();
