@@ -15,15 +15,37 @@ class ApproveRequestForm extends React.Component {
             collapsed: false,
             newComment: "",
             sortedComments: [],
+            selectedInterviewers: [],
+            selectedApprovers: [],
+            interviewerOptions: [],
+            approverOptions: [],
         }
     }
 
 
     handleCheckbox = (e) => this.setState({collapsed: !this.state.collapsed});
 
-    async componentWillMount() {
+    
+    async componentDidMount() {
         await this.props.fetchRequestEnvelope(Number(this.props.match.params.id))
         this.setState({ shouldRedirect: true });
+        this.props.fetchApprovers("APPROVER");
+        this.props.fetchInterviewers("INTERVIEWER");
+    }
+
+    componentDidUpdate(prevProps){
+        if(JSON.stringify(prevProps.requestEnvelope) !== JSON.stringify(this.props.requestEnvelope)){
+            this.setState({selectedApprovers:this.props.requestEnvelope.approvers.map(({id}) => id), selectedInterviewers:this.props.requestEnvelope.interviewers.map(({id}) => id)})
+        }
+
+
+        if(JSON.stringify(prevProps.approverOptions) !== JSON.stringify(this.props.approverOptions)){
+            this.setState({approverOptions:this.props.approverOptions})
+        }
+
+        if(JSON.stringify(prevProps.interviewerOptions) !== JSON.stringify(this.props.interviewerOptions)){
+            this.setState({interviewerOptions:this.props.interviewerOptions})
+        }
     }
 
     render() {
@@ -42,14 +64,14 @@ class ApproveRequestForm extends React.Component {
         }
 
         const handleComment = () => {
-            console.log(this.state.newComment);
-            console.log(this.props.requestEnvelope.id);
-            return this.props.postComment(this.state.newComment,this.props.requestEnvelope.id);
+            // console.log(this.state.newComment);
+            // console.log(this.props.requestEnvelope.id);
+            // return this.props.postComment(this.state.newComment,this.props.requestEnvelope.id);
         }
 
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
             return <Redirect to='/' />
-        } else if (!this.props.requestEnvelope || this.props.isFetching) {
+        } else if (!this.props.requestEnvelope || this.props.isFetching || !this.props.approverOptions || !this.props.interviewerOptions) {
             return <Loader />
         }
 
@@ -64,6 +86,9 @@ class ApproveRequestForm extends React.Component {
             })
         })
 
+        const handleInterviewerChange = (e, {name, value}) => this.setState({ [name]: value })
+        // const handleApproverChange = (e, { value }) => this.setState({ selectedApprovers: value })
+
         return (
             <Grid columns='16' centered>
                 <Grid.Column width='10'>
@@ -74,8 +99,8 @@ class ApproveRequestForm extends React.Component {
                             <Form.Input fluid label='Job Posting ID' placeholder='ID' value={this.props.requestEnvelope.jobPosting} readOnly />
                         </Form.Group>
                         <Form.Group widths='equal'>
-                            <Form.Select fluid label='Interviewer' options={this.props.requestEnvelope.approvers.map(({ id, email }, index) => ({}))} placeholder='Select' value={'{`${this.props.requestEnvelope.interviewer.id}`}'} />
-                            <Form.Select fluid label='Approvers' options={this.props.requestEnvelope.approvers.map(({ id, email }, index) => ({ key: index, text: email, value: id }))} placeholder='Select' />
+                            <Form.Select fluid label='Interviewer' name='selectedInterviewers' options={this.props.interviewerOptions.map(({ id, firstName,lastName }, index) => ({key: index, text: `${firstName} ${lastName}`, value: id }))} placeholder='Select' value={this.state.selectedInterviewers} onChange={handleInterviewerChange} multiple selection />
+                            <Form.Select fluid label='Approvers' name='selectedApprovers' options={this.props.approverOptions.map(({ id, firstName, lastName }, index) => ({ key: index, text: `${firstName} ${lastName}`, value: id }))} placeholder='Select' value={this.state.selectedApprovers} onChange={handleInterviewerChange} multiple selection/>
                         </Form.Group>
                         <Form.TextArea label='Business Case' placeholder='Describe Business Case' value={this.props.requestEnvelope.businessCase} rows='6' readOnly />
                         <h4>Client Info</h4>

@@ -26,4 +26,5 @@ public interface RequestEnvelopeFull {
 	Set<RequestCommentSummary> getRequestComments();
 	Set<ResourceSummary> getSelectedResources();
 	Set<User> getApprovers();
+	Set<User> getInterviewers();
 }
