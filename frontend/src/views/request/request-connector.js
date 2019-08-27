@@ -25,8 +25,8 @@ function mapStateToProps(state){
     }
     const currentUser = state.user.firstName +' '+ state.user.lastName;
     return{
-        interviewerOptions: state.interviewerOptions,
-        approverOptions: state.approverOptions,
+        //interviewerOptions: state.interviewerOptions,
+        //approverOptions: state.approverOptions,
         request: state.request,
         user: state.user,
         currentUser,

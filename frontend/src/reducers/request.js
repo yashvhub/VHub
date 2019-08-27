@@ -9,7 +9,8 @@ import {
     RECEIVE_APPROVERS, 
     HAS_ERROR_USERS, 
     CLEAR_REQUEST, 
-    SUBMIT_SUCCESS
+    SUBMIT_SUCCESS,
+    CLEAR_BANNER
 } from "../action-creators/actions";
 
 function blankState(){
@@ -41,6 +42,13 @@ function submitSuccess(state){
     }
 }
 
+function clear(state) {
+    return {
+        ...state,
+        submitSuccess: false
+    }
+}
+
 
 
 function initializeRequest(state, action){
@@ -63,7 +71,7 @@ function addNewResource(state) {
         compensation: '',
         experience: '',
         skills: []
-    }
+    };
     state.requestedResources.push(resourceRequestDefaultObject)
     return{
         ...state
@@ -72,7 +80,7 @@ function addNewResource(state) {
 
 function editResource(state, action){
     const field = action.field;
-    const value = action.value
+    const value = action.value;
     return{
         ...state,
             requestedResources:[
@@ -172,7 +180,8 @@ export default function (state = blankState(), action) {
         [REMOVE_SKILL]: removeSkill,
         [EDIT_RESOURCE]: editResource,
         [CLEAR_REQUEST]: blankState,
-        [SUBMIT_SUCCESS]: submitSuccess
+        [SUBMIT_SUCCESS]: submitSuccess,
+        [CLEAR_BANNER]: clear
     };
 
     const reducer = actionHandlers[action.type];

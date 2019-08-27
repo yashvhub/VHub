@@ -1,18 +1,28 @@
-import React from 'react';
+import React,{ useEffect } from 'react';
 import UserCard from './userCard';
 import RequestList from "../request-list/request-list-connector";
-import {Grid, Loader, Button, Message} from 'semantic-ui-react';
-import {Redirect, Link} from 'react-router-dom';
+import {Grid, Button, Message, Divider} from 'semantic-ui-react';
+import {Link} from 'react-router-dom';
 
 function Home(props){
+    useEffect( () => {
+        setTimeout(() => {
+           props.clearBanner();
+        }, 3000)
+    });
 
     const showSuccess = () => {
-        return props.submitSuccess ? <Message
-        success
-        header='Success!'
-        content="Request Submitted"
-        /> : null
-    }
+        return props.submitSuccess ? <Grid.Column>
+            <Grid.Row>
+                <Message
+                    success
+                    header='Success!'
+                    content="Request Submitted"
+                    />
+            </Grid.Row>
+            <Divider/>
+        </Grid.Column>: null
+    };
 
     return (
         <Grid columns={2} container>
