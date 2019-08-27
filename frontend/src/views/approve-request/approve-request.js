@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Message, Grid, Button, FormGroup, Loader, Divider, Checkbox, Comment, Header } from 'semantic-ui-react';
 import ApproveResourceForm from './approve-resourceForm-connector';
 import { Redirect, Link } from 'react-router-dom';
-import Comments from '../common/comments.js';
+// import Comments from '../common/comments.js';
 import { ApproveProposal } from './approve-proposal.js';
 
 class ApproveRequestForm extends React.Component {
@@ -55,14 +55,22 @@ class ApproveRequestForm extends React.Component {
             this.setState({ formSuccess: true });
         }
 
+        let sortedComments = [];
+
+        if(this.props.requestEnvelope){
+            sortedComments = this.props.requestEnvelope.requestComments.sort((a,b) => {
+                return new Date(a.createdAt) - new Date(b.createdAt)
+            })
+        }
+
         const handleCommentChange = (event) => {
             this.setState({newComment: event.target.value});
         }
 
         const handleComment = () => {
-            // console.log(this.state.newComment);
-            // console.log(this.props.requestEnvelope.id);
-            // return this.props.postComment(this.state.newComment,this.props.requestEnvelope.id);
+            this.props.postComment(this.state.newComment,this.props.requestEnvelope.id, sessionStorage.getItem('token'));
+            this.props.fetchRequestEnvelope(Number(this.props.match.params.id))
+            this.setState({newComment: ""})
         }
 
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
@@ -118,15 +126,12 @@ class ApproveRequestForm extends React.Component {
                             </Form.Group>
                         }
 
-
-
-
                         <Checkbox label='Collapse comments' value={this.state.collapsed} onChange={this.handleCheckbox} />
                         <Comment.Group collapsed={this.state.collapsed} threaded>
                             <Header as='h3' dividing>
                                 Comments
                             </Header>
-                            {this.props.requestEnvelope.requestComments.map(comment => (
+                            {sortedComments.map(comment => (
                                 <Comment>
                                     <Comment.Content>
                                         <Comment.Author>{`${comment.author.firstName} ${comment.author.lastName}`}</Comment.Author>
@@ -139,19 +144,10 @@ class ApproveRequestForm extends React.Component {
                             ))}
 
 
-                            <Form reply>
                                 <Form.TextArea name="comment" value={this.state.newComment} onChange={handleCommentChange}/>
-                                <Button content='Add Reply' labelPosition='left' icon='edit' primary onClick={handleComment} />
-                            </Form>
+                                <Button content='Add Reply' labelPosition='left' icon='edit' onClick={handleComment} />
 
                         </Comment.Group>
-
-
-
-
-
-
-                        {/* <Comments commentBlock={this.props.requestEnvelope.requestComments} commentClick={props.postComment}/> */}
 
                         <Message success header='Form Completed' content="Request Approved Successfully" />
 

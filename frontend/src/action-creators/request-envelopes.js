@@ -1,5 +1,6 @@
 import RequestEnvelopes from "../API/request-envelopes";
 import RequestComments from "../API/request-comments";
+import Users from "../API/users";
 import { REQUEST_REQUEST_ENVELOPE, RECEIVE_REQUEST_ENVELOPE, RECEIVE_PROPOSAL_REQUEST_ENVELOPE, INVALIDATE_REQUEST_ENVELOPE } from "./actions";
 
 export function requestRequestEnvelope() {
@@ -81,24 +82,25 @@ export function approveRequestEnvelope(requestEnvelope) {
 }
 
 
-export function postComment(comment, requestEnvelopeId) {
+export function postComment(comment, requestEnvelopeId, author) {
+    let today = new Date()
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
 
     const commentObject = {
         comment: comment,
         requestId: requestEnvelopeId,
+        author: `${Users.getPath()}/${author}`,
+        createdAt: today,
     }
 
     return async function (dispatch, getState) {
         try {
-            dispatch(requestRequestEnvelope());
-            const [response, status] = await RequestComments.post(commentObject, {});
-            if (response && !getState().requestEnvelope.didInvalidate) {
-                dispatch(receiveRequestEnvelope(response.data));
-            } else {
-                dispatch(invalidateRequestEnvelope())
-            }
+            const [response, status] = await RequestComments.post(commentObject, {headers: { 'Content-Type': 'application/json' }});
         } catch (e) {
-            dispatch(invalidateRequestEnvelope());
             console.error(e);
         }
     }

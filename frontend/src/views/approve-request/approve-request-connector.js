@@ -1,9 +1,9 @@
 import {connect} from 'react-redux';
 import approveRequest from './approve-request';
 import {fetchRequestEnvelope,approveRequestEnvelope, postComment} from '../../action-creators/request-envelopes';
-import {fetchApprovers, fetchInterviewers, handleChange} from '../../action-creators/request'
+import {fetchApprovers, fetchInterviewers} from '../../action-creators/request'
 
-function mapStateToProps(state,ownProps){
+function mapStateToProps(state){
     return{
         requestEnvelope: state.requestEnvelope.envelope,
         isFetching: state.requestEnvelope.isFetching,
@@ -19,7 +19,6 @@ const mapDispatchToProps = {
     postComment,
     fetchApprovers,
     fetchInterviewers,
-    // handleChange,
 }
 
 
