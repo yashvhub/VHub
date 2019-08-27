@@ -114,6 +114,15 @@ class RequestEnvelopeRepository extends Repository {
         }
     }
 
+    async getAll(config = {}) {
+        try {
+            const response = await API.get(`${this.url}/search/findAllByOrderByRequestDateDesc`, config);
+            return this.getData(response);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     async approvePatch(data, id, config = {}) {
         try {
             if (data.id) {
