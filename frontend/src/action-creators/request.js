@@ -10,7 +10,8 @@ import {
     RECEIVE_INTERVIEWERS, 
     HAS_ERROR_USERS, 
     CLEAR_REQUEST,
-    SUBMIT_SUCCESS
+    SUBMIT_SUCCESS,
+    CLEAR_BANNER
 } from "./actions";
 import RequestEnvelops from '../API/request-envelopes';
 import Users from "../API/users";
@@ -72,7 +73,7 @@ export function createNewRequest(newRequestObject, requestUser) {
         clientName: newRequestObject.clientName,
         team: newRequestObject.team,
         manager: newRequestObject.manager
-    }
+    };
     const dataObject = {
         baseRequest,
         requester: requestUser.id,
@@ -84,7 +85,7 @@ export function createNewRequest(newRequestObject, requestUser) {
         locationCountryPref: newRequestObject.locationCountryPref,
         comments: newRequestObject.comments,
 
-    }
+    };
 
     return async (dispatch) =>{ 
         try {
@@ -97,6 +98,12 @@ export function createNewRequest(newRequestObject, requestUser) {
         } catch(e){
             console.error(e)
         }
+    }
+}
+
+export function clearBanner() {
+    return {
+        type: CLEAR_BANNER
     }
 }
 
@@ -141,7 +148,7 @@ export function fetchApprovers(role) {
             }
         };
         try {
-            dispatch(requestUsers())
+            dispatch(requestUsers());
             let response, status;
             if(role) {
                 [response, status] = await Users.getByRole(role, config)
@@ -152,7 +159,7 @@ export function fetchApprovers(role) {
                 dispatch(invalidateUsers());
             }
         } catch (e) {
-            dispatch(invalidateUsers())
+            dispatch(invalidateUsers());
             console.error(e);
         }
     }
@@ -166,7 +173,7 @@ export function fetchInterviewers(role) {
             }
         };
         try {
-            dispatch(requestUsers())
+            dispatch(requestUsers());
             let response, status;
             if(role) {
                 [response, status] = await Users.getByRole(role, config)
@@ -177,7 +184,7 @@ export function fetchInterviewers(role) {
                 dispatch(invalidateUsers());
             }
         } catch (e) {
-            dispatch(invalidateUsers())
+            dispatch(invalidateUsers());
             console.error(e);
         }
     }

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Grid, Button, Message } from 'semantic-ui-react';
+import {Form, Grid, Button, Message, Divider, Header} from 'semantic-ui-react';
 import ResourceForm from './resourceForm-connector';
 import { Redirect } from 'react-router-dom';
-import { equal } from 'assert';
 
 const RequestForm = (props) => {
     const [interviewersError, setInterviewersError] = useState(false);
@@ -13,6 +12,7 @@ const RequestForm = (props) => {
     const [managerError, setManagerError] = useState(false);
     const [locationPrefError, setLocationPrefError] = useState(false);
     const [resourcesError, setResourcesError] = useState(false);
+    const [commentState, setCommentStateError] = useState(false);
 
     useEffect(() => {
         props.clearRequest()
@@ -21,7 +21,8 @@ const RequestForm = (props) => {
         props.fetchInterviewers("INTERVIEWER");
     }, [])
 
-    const { requestedBy, requestDate, interviewers, approvers, businessCase, clientName, team, manager, locationCityPref, locationStatePref, locationCountryPref, requestedResources, comments, submitSuccess } = props.request;
+    const { requestedBy, requestDate, interviewers, approvers, businessCase, clientName, team, manager,
+        locationCityPref, locationStatePref, locationCountryPref, requestedResources, comments, submitSuccess } = props.request;
 
     const addResourceRequest = () => {
         return (
@@ -29,6 +30,20 @@ const RequestForm = (props) => {
             props.addResourceRequest()
         )
     }
+
+    const errorComponent = () => {
+        return (
+            <div>
+            <Divider/>
+            <Message
+                error
+                header='Action Forbidden'
+                content='Please Fill All The Details'
+            />
+            </div>
+        )
+    }
+
     const validateResources = () => {
         validateArray(requestedResources, setResourcesError);
         validateArray(interviewers, setInterviewersError);
@@ -40,11 +55,14 @@ const RequestForm = (props) => {
         validateString(locationCityPref, setLocationPrefError);
         validateString(locationStatePref, setLocationPrefError);
         validateString(locationCountryPref, setLocationPrefError);
-        if (!interviewersError || !approversError || !businessCaseError || !clientNameError || !teamError || !managerError || !locationPrefError || !resourcesError) {
+        validateString(commentState, setCommentStateError);
+        if((requestedBy.length === 0) || (businessCase.length === 0) || (interviewers.length === 0) || (approvers.length === 0) || (clientName.length === 0)
+        || (team.length === 0) || (manager.length === 0) || (locationCityPref.length === 0) || (locationCountryPref.length === 0)
+        || (locationStatePref.length === 0) || (comments.length === 0) || (requestedResources.length === 0)) {
+            errorComponent();
+        } else {
             props.createNewRequest(props.request, props.user)
-            
         }
-
     }
 
     const validateString = (string, callback) => {
@@ -116,7 +134,11 @@ const RequestForm = (props) => {
                         onBlur={() => validateString(businessCase, setBusinessCaseError)}
                         error={businessCaseError}
                     />
-                    <h4>Client Info</h4>
+                    <Divider horizontal>
+                        <Header as='h3'>
+                            Client Info
+                        </Header>
+                    </Divider>
                     <Form.Group widths='equal'>
                         <Form.Input
                             fluid
@@ -192,13 +214,26 @@ const RequestForm = (props) => {
                         content='Please Add Required Resources'
                     />
                     {resources}
+
+                    <Divider horizontal>
+                        <Header as='h3'>
+                            Comments
+                        </Header>
+                    </Divider>
                     <Form.TextArea 
-                        label='Comments' 
-                        placeholder='Enter Comment' 
+                        placeholder='Enter Comment'
                         name='comments' 
                         onChange={props.handleChange}
-                        value={comments}/>
-                    <Form.Button onClick={validateResources}>Submit</Form.Button>
+                        value={comments}
+                        onBlur={() => validateArray(comments, setCommentStateError)}
+                        error={commentState}
+                    />
+
+                    <Button onClick={validateResources}>Submit</Button>
+                    <Grid.Row>
+                        {errorComponent()}
+                    </Grid.Row>
+
                 </Form>
             </Grid.Column>
         </Grid>
