@@ -34,7 +34,7 @@ class ApproveRequestForm extends React.Component {
     }
 
     componentDidUpdate(prevProps){
-        if(JSON.stringify(prevProps.requestEnvelope) !== JSON.stringify(this.props.requestEnvelope)){
+        if(this.props.requestEnvelope && JSON.stringify(prevProps.requestEnvelope) !== JSON.stringify(this.props.requestEnvelope)){
             this.setState({selectedApprovers:this.props.requestEnvelope.approvers.map(({id}) => id), selectedInterviewers:this.props.requestEnvelope.interviewers.map(({id}) => id)})
         }
 
