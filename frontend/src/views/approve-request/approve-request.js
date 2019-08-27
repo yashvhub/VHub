@@ -55,10 +55,6 @@ class ApproveRequestForm extends React.Component {
             this.setState({ formSuccess: true });
         }
 
-        // let sortedComments = this.props.requestEnvelope.requestComments.sort((a,b) => {
-        //     return new Date(a.createdAt) - new Date(b.createdAt)
-        // })
-
         const handleCommentChange = (event) => {
             this.setState({newComment: event.target.value});
         }
@@ -87,8 +83,6 @@ class ApproveRequestForm extends React.Component {
         })
 
         const handleInterviewerChange = (e, {name, value}) => this.setState({ [name]: value })
-        // const handleApproverChange = (e, { value }) => this.setState({ selectedApprovers: value })
-
         return (
             <Grid columns='16' centered>
                 <Grid.Column width='10'>
