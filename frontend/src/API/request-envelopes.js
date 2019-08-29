@@ -99,6 +99,29 @@ class RequestEnvelopeRepository extends Repository {
         }
     }
 
+    async updateInterviewersAndApprovers(requestEnvelopeId, interviewersUriList, approversUriList, config = { headers: { 'Content-Type': 'text/uri-list' } }){
+        try{
+            const requestPath = `${this.getPath()}/${requestEnvelopeId}/`
+            const interviewersResponse = API.put(`${requestPath}/interviewers`,
+            interviewersUriList.join('\n'),
+            {
+                headers: {
+                    'Content-Type': 'text/uri-list'
+                }
+            });
+
+            const approverResponse = API.put(`${requestPath}/approvers`,
+            approversUriList.join('\n'),
+            {
+                headers: {
+                    'Content-Type': 'text/uri-list'
+                }
+            });
+        }catch(e){
+            console.error(e);
+        }
+    }
+
     async getByName(name, config = {}) {
         try {
             const response = await API.get(`${this.url}/search/findByRequesterNameByRequestDateDesc`, {
@@ -131,9 +154,9 @@ class RequestEnvelopeRepository extends Repository {
                 })
             }
             if (data) {
-                await API.put(`${this.getPath()}/${id}/requestStatus`, `${this.getPath()}/${id}/requestStatuses/${2}`,
+                const approve = await API.put(`${this.getPath()}/${id}/requestStatus`, `${this.getPath()}/${id}/requestStatuses/${2}`,
                     { headers: { 'Content-Type': 'text/uri-list' } });
-                return [true, null];
+                return this.getData(approve);
             }
         }
         catch (e) {

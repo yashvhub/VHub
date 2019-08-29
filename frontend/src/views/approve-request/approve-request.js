@@ -19,6 +19,7 @@ class ApproveRequestForm extends React.Component {
             selectedApprovers: [],
             interviewerOptions: [],
             approverOptions: [],
+            isFetching: false,
         }
     }
 
@@ -28,14 +29,14 @@ class ApproveRequestForm extends React.Component {
     
     async componentDidMount() {
         await this.props.fetchRequestEnvelope(Number(this.props.match.params.id))
-        this.setState({ shouldRedirect: true });
+        this.setState({ shouldRedirect: true , isFetching: true});
         this.props.fetchApprovers("APPROVER");
         this.props.fetchInterviewers("INTERVIEWER");
     }
 
     componentDidUpdate(prevProps){
-        if(this.props.requestEnvelope && JSON.stringify(prevProps.requestEnvelope) !== JSON.stringify(this.props.requestEnvelope)){
-            this.setState({selectedApprovers:this.props.requestEnvelope.approvers.map(({id}) => id), selectedInterviewers:this.props.requestEnvelope.interviewers.map(({id}) => id)})
+        if(this.props.requestEnvelope && (JSON.stringify(prevProps.requestEnvelope) !== JSON.stringify(this.props.requestEnvelope)) || this.state.isFetching){
+            this.setState({selectedApprovers:this.props.requestEnvelope.approvers.map(({id}) => id), selectedInterviewers:this.props.requestEnvelope.interviewers.map(({id}) => id), isFetching: false})
         }
 
 
@@ -51,7 +52,11 @@ class ApproveRequestForm extends React.Component {
     render() {
 
         const approve = async () => {
-            await this.props.approveRequestEnvelope(this.props.requestEnvelope);
+            await this.props.approveRequestEnvelope(this.props.requestEnvelope, this.state.selectedApprovers, this.state.selectedInterviewers);
+        }
+
+        const save = async () => {
+            await this.props.saveApproveChanges(this.props.requestEnvelope, this.state.selectedApprovers, this.state.selectedInterviewers);
             this.setState({ formSuccess: true });
         }
 
@@ -76,7 +81,7 @@ class ApproveRequestForm extends React.Component {
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
             return <Redirect to='/' />
         } else if (!this.props.requestEnvelope || this.props.isFetching || !this.props.approverOptions || !this.props.interviewerOptions) {
-            return <Loader />
+            return <Loader active/>
         }
 
         const resources = this.props.requestEnvelope.resourceRequests.map((resource, index) => {
@@ -152,7 +157,7 @@ class ApproveRequestForm extends React.Component {
                         <Message success header='Form Completed' content="Request Approved Successfully" />
 
                         <FormGroup widths='equal'>
-                            <Button icon='save' label='Save Request' />
+                            <Button icon='save' label='Save Request' onClick={save}/>
                             <Button icon='check' label='Save And Approve' onClick={approve} />
                         </FormGroup>
 

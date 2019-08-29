@@ -64,13 +64,40 @@ export function fetchProposalRequestEnvelope(id, projection) {
     }
 }
 
-export function approveRequestEnvelope(requestEnvelope) {
+export function saveApproveChanges(requestEnvelope, approvers, interviewers){
+
+    const interviewersUriList = interviewers.map(interviewer =>
+        `${Users.getPath()}/${interviewer}`)
+
+    const approversUriList = approvers.map(approver =>
+        `${Users.getPath()}/${approver}`)
+
+        return async function (dispatch, getState) {
+            try {
+                //update interviewers and approvers here
+                await RequestEnvelopes.updateInterviewersAndApprovers(requestEnvelope.id,interviewersUriList,approversUriList)
+            } catch (e) {
+                console.error(e);
+            }
+        }
+}
+
+export function approveRequestEnvelope(requestEnvelope, approvers, interviewers) {
+
+    const interviewersUriList = interviewers.map(interviewer =>
+        `${Users.getPath()}/${interviewer}`)
+
+    const approversUriList = approvers.map(approver =>
+        `${Users.getPath()}/${approver}`)
+
     return async function (dispatch, getState) {
         try {
             dispatch(requestRequestEnvelope());
-            const [response, status] = await RequestEnvelopes.approvePatch(requestEnvelope, requestEnvelope.id, {});
-            if (response && !getState().requestEnvelope.didInvalidate) {
-                dispatch(receiveRequestEnvelope(response.data));
+            const approve = await RequestEnvelopes.approvePatch(requestEnvelope, requestEnvelope.id, {});
+            //update interviewers and approvers here
+            await RequestEnvelopes.updateInterviewersAndApprovers(requestEnvelope.id,interviewersUriList,approversUriList)
+            if (approve && !getState().requestEnvelope.didInvalidate) {
+                dispatch(receiveRequestEnvelope(approve.data));
             } else {
                 dispatch(invalidateRequestEnvelope())
             }
