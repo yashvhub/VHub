@@ -11,7 +11,7 @@ class ConfirmTable extends React.Component{
     render(){
         let skillArray = [];
 
-        this.props.resources.map((resources) => {
+        this.props.resources[0].resources.map((resources) => {
             {resources.skills.map(skills => (
                 skillArray.includes(skills.skill) ? null : skillArray.push(skills.skill)
             ))}
@@ -35,7 +35,7 @@ class ConfirmTable extends React.Component{
                 </Table.Header>
 
                 <Table.Body>
-                    {this.props.resources.map(resource => (
+                    {this.props.resources[0].resources.map(resource => (
                         <Table.Row>
                             <Table.Cell collapsing>
                             <Checkbox checkbox />

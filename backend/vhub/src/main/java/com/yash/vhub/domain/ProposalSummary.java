@@ -11,5 +11,5 @@ import org.springframework.data.rest.core.config.Projection;
 public interface ProposalSummary {
 	long getId();
 	long getResourceRequestId();
-	Set<Resource> getResources();
+	Set<ResourceSummary> getResources();
 }

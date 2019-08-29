@@ -100,7 +100,7 @@ class ConfirmPage extends React.Component{
                     </Form.Group> */}
                     <h4>Selected Resources</h4>
                     <Form.Group>
-                            <ConfirmTable resources={this.props.requestEnvelope.selectedResources}/>
+                            <ConfirmTable resources={this.props.requestEnvelope.resourceRequests[0].proposals}/>
                     </Form.Group>
                     <br/>
                     <Form.TextArea label='Comments' placeholder='Comments...' rows='6'/>
