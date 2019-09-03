@@ -164,6 +164,24 @@ class RequestEnvelopeRepository extends Repository {
             return [null, 'Update Failed.']
         }
     }
+
+    async confirm(selectedResourcesUriList, requestEnvelopeId){
+        try{
+            const requestPath = `${this.getPath()}/${requestEnvelopeId}/`
+            const selectedResourcesResponse = API.put(`${requestPath}/selectedResources`,
+            selectedResourcesUriList.join('\n'),
+            {
+                headers: {
+                    'Content-Type': 'text/uri-list'
+                }
+            });
+            if(selectedResourcesResponse){
+                return(true)
+            }
+        }catch(e){
+            console.error(e);
+        }
+    }
 }
 
 const RequestEnvelopes = new RequestEnvelopeRepository('request-envelopes');

@@ -1,15 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { Table , Checkbox, Icon} from 'semantic-ui-react';
 
 class ConfirmTable extends React.Component{
     constructor(props){
         super(props)
-    }
 
+    }
+    
     render(){
         let skillArray = [];
+
+    function getIndex(value, arr, prop) {
+        for(var i = 0; i < arr.length; i++) {
+            if(arr[i][prop] === value) {
+                return i;
+            }
+        }
+        return -1; //to handle the case where the value doesn't exist
+    }
+
 
         this.props.resources[0].resources.map((resources) => {
             {resources.skills.map(skills => (
@@ -35,24 +45,33 @@ class ConfirmTable extends React.Component{
                 </Table.Header>
 
                 <Table.Body>
-                    {this.props.resources[0].resources.map(resource => (
-                        <Table.Row>
+                {this.props.selectedBooleans &&
+                    
+                    this.props.resources.map(resource => {                 
+                        return (resource.resources.map(proposal => {
+                            let checkedIndex = getIndex(proposal.id, this.props.selectedBooleans, 'id')
+                        
+                        return(<Table.Row>
                             <Table.Cell collapsing>
-                            <Checkbox checkbox />
+                            <Checkbox checkbox defaultChecked={this.props.selectedBooleans[checkedIndex].checked} onChange={this.props.onChange} value={proposal.id}/>
                             </Table.Cell>
-                            <Table.Cell>{resource.name}</Table.Cell>
-                            <Table.Cell><Link to='#'>{resource.resumeLink}</Link></Table.Cell>
-                            <Table.Cell>{resource.yearsOfExperience}</Table.Cell>
+                            <Table.Cell>{proposal.name}</Table.Cell>
+                            <Table.Cell><Link to='#'>{proposal.resumeLink}</Link></Table.Cell>
+                            <Table.Cell>{proposal.yearsOfExperience}</Table.Cell>
                             {skillArray.map(skill => ( 
                                     <Table.Cell textAlign='center'>
-                                        {resource.skills.filter(s => s.skill === skill).length ? 
+                                        {proposal.skills.filter(s => s.skill === skill).length ? 
                                         <Icon color='green' name='checkmark' size='large' /> : null
                                         }
                                     </Table.Cell>
                                     
                             ))}
-                        </Table.Row>
-                    ))}
+                        </Table.Row>)
+                    }))}
+ 
+                                    )
+                }
+                
                 </Table.Body>
             </Table>
         );

@@ -10,14 +10,8 @@ function mapStateToProps({requestEnvelope}){
     
 }
 
-function mapDispatchToProps(dispatch, ownProps) {
-    return {
-        confirmInterviewRequest: () => {
-            dispatch(confirmInterview())
-        },
-        fetchRequestEnvelope: () => {
-            dispatch(fetchRequestEnvelope(ownProps.match.params.id))
-        }
-    }
+const mapDispatchToProps = {
+        confirmInterview,
+        fetchRequestEnvelope,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(confirm);

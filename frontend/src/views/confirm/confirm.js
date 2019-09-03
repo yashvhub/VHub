@@ -1,6 +1,6 @@
 import React from 'react';
 import {Redirect} from 'react-router';
-import {Form, Grid, Button, Loader, List, Segment, Divider, Header} from 'semantic-ui-react';
+import {Form, Grid, Button, Loader, List, Segment, Divider, Header, Message} from 'semantic-ui-react';
 import ConfirmTable from './confirmTable';
 
 class ConfirmPage extends React.Component{
@@ -10,12 +10,35 @@ class ConfirmPage extends React.Component{
         this.state = {
             shouldRedirect: false,
             formSuccess: false,
+            selectedResources: [],
+            selectedBooleans: [],
         }
     }
 
     async componentWillMount() {
         await this.props.fetchRequestEnvelope(Number(this.props.match.params.id));
-        // this.setState({ shouldRedirect: true });
+    }
+
+    componentDidUpdate(prevProps){
+        if(this.props.requestEnvelope && (prevProps.requestEnvelope !== this.props.requestEnvelope)){
+            let selectedResourcesIds = []
+            let selectedResourcesSet = new Set(this.props.requestEnvelope.selectedResources.map((id) => id.id));
+            let selectedResourcesBooleans = this.props.requestEnvelope.resourceRequests[0].proposals.map(proposal => {
+                return(proposal.resources.map(resource => {
+                    return{
+                    id:resource.id,
+                    checked: selectedResourcesSet.has(resource.id)
+                }
+
+                }))
+            })
+
+            let actualBooleans = selectedResourcesBooleans.flat();
+            this.props.requestEnvelope.selectedResources.forEach((resource) => {
+                selectedResourcesIds.push(resource.id)
+            })
+            this.setState({selectedResources: selectedResourcesIds, selectedBooleans: actualBooleans})
+        }
     }
 
     render(){
@@ -25,11 +48,33 @@ class ConfirmPage extends React.Component{
             return <Loader />
         }
 
+        const checkboxChange = (e, data) => {
+            let contains = this.state.selectedResources.includes(data.value)
+            if(!contains && data.checked){
+                let newArray = this.state.selectedResources;
+                newArray.push(data.value)
+                this.setState({selectedResources: newArray})
+            }else{
+                if(!data.checked){
+                    let smallerArray = this.state.selectedResources;
+                    smallerArray.splice(smallerArray.indexOf(data.value),1)
+                    this.setState({selectedResources: smallerArray})
+                }
+            }
+        }
+
+        const confirmButton = async () => {
+            let response = await this.props.confirmInterview(this.state.selectedResources, this.props.requestEnvelope.id)
+            if(response){
+                this.setState({formSuccess:true})
+            }
+        }
+
         const value = this.props.requestEnvelope.proposalType.type.toLowerCase();
         return(
             <Grid columns='16' centered>
                 <Grid.Column width='10'>
-                <Form>
+                <Form success={this.state.formSuccess}>
                     <Form.Group widths='equal'>
                         <Form.Input fluid label='Requested By' value={`${this.props.requestEnvelope.requester.firstName} ${this.props.requestEnvelope.requester.lastName}`} readOnly/>
                         <Form.Input fluid label='Requested Date' placeholder='Requested Date' value={this.props.requestEnvelope.requestDate} readOnly/>
@@ -95,17 +140,19 @@ class ConfirmPage extends React.Component{
                         </Form.Group>
                         <Form.Input fluid label='Number of Resources' value={this.props.requestEnvelope.selectedResources.length} readOnly/>
                     </Form.Group>
-                    {/* <Form.Group widths='equal'>
-                        <Form.Input fluid label='Experience In Years Required' placeholder='years' readOnly/>
-                    </Form.Group> */}
+
                     <h4>Selected Resources</h4>
-                    <Form.Group>
-                            <ConfirmTable resources={this.props.requestEnvelope.resourceRequests[0].proposals}/>
-                    </Form.Group>
+                    {this.state.selectedBooleans.length > 0 && 
+                                            <Form.Group>
+                                            <ConfirmTable onChange={checkboxChange} selectedBooleans={this.state.selectedBooleans} resources={this.props.requestEnvelope.resourceRequests[0].proposals}/>
+                                    </Form.Group>
+                    }
+
                     <br/>
                     <Form.TextArea label='Comments' placeholder='Comments...' rows='6'/>
+                    <Message success header='Form Completed' content="Request Confirmed Successfully" />
                     <Form.Group widths='equal'>
-                        <Button icon='check' label='Confirm Selection' onClick={this.props.confirmInterviewRequest}/>
+                        <Button icon='check' label='Confirm Selection' onClick={confirmButton}/>
                     </Form.Group>
                 </Form>
                 </Grid.Column>
