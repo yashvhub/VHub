@@ -58,7 +58,7 @@ class RequestEnvelopeRepository extends Repository {
                 }
                 const resourceRequestResponse = await API.post(`${ResourceRequests.getPath()}/`, resourceRequest, { headers: { 'Content-Type': 'application/json' } })
 
-                const skillUriList = data.resources[0].skills.map(skill =>
+                const skillUriList = resource.skills.map(skill =>
                     `${Skills.getPath()}/${skill}`)
 
                 const skillsResponse = await API.put(`${ResourceRequests.getPath()}/${resourceRequestResponse.data.id}/skills`,
