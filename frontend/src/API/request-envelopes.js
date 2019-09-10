@@ -146,6 +146,32 @@ class RequestEnvelopeRepository extends Repository {
         }
     }
 
+    async getAllToggled(config = {
+        params: 'CLOSED'
+    }) {
+        try {
+            const response = await API.get(`${this.url}/search/findAllByRequestStatus_StatusIs`, config);
+            return this.getData(response);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async getByNameToggled(name, config = {}) {
+        try {
+            const response = await API.get(`${this.url}/search/findByRequesterNameByRequestDateDesc`, {
+                ...config,
+                params: {
+                    ...config.params,
+                    name
+                }
+            });
+            return this.getData(response);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     async approvePatch(data, id, config = {}) {
         try {
             if (data.id) {
@@ -165,6 +191,30 @@ class RequestEnvelopeRepository extends Repository {
         }
     }
 
+    async closeRequestPatch(id, config = {}) {
+        try {
+                const approve = await API.put(`${this.getPath()}/${id}/requestStatus`, `${this.getPath()}/${id}/requestStatuses/${4}`,
+                    { headers: { 'Content-Type': 'text/uri-list' } });
+                return this.getData(approve);
+        }
+        catch (e) {
+            console.error(e);
+            return [null, 'close Failed.']
+        }
+    }
+
+    async reOpenRequestPatch(id, config = {}) {
+        try {
+            const approve = await API.put(`${this.getPath()}/${id}/requestStatus`, `${this.getPath()}/${id}/requestStatuses/${1}`,
+                { headers: { 'Content-Type': 'text/uri-list' } });
+            return this.getData(approve);
+        }
+        catch (e) {
+            console.error(e);
+            return [null, 'reopen Failed.']
+        }
+    }
+
     async confirm(selectedResourcesUriList, requestEnvelopeId){
         try{
             const requestPath = `${this.getPath()}/${requestEnvelopeId}/`
@@ -175,7 +225,9 @@ class RequestEnvelopeRepository extends Repository {
                     'Content-Type': 'text/uri-list'
                 }
             });
-            if(selectedResourcesResponse){
+            const approve = await API.put(`${this.getPath()}/${requestEnvelopeId}/requestStatus`, `${this.getPath()}/${requestEnvelopeId}/requestStatuses/${3}`,
+                { headers: { 'Content-Type': 'text/uri-list' } });
+            if(selectedResourcesResponse && approve){
                 return(true)
             }
         }catch(e){

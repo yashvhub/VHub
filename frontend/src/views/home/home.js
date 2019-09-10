@@ -9,7 +9,7 @@ function Home(props){
         setTimeout(() => {
            props.clearBanner();
         }, 3000)
-    });
+    },[]);
 
     const showSuccess = () => {
         return props.submitSuccess ? <Grid.Column>

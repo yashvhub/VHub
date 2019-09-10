@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import RequestList from './request-list';
-import {fetchRequestEnvelopeList} from "../../action-creators/request-list";
+import {closeRequest, fetchRequestEnvelopeList, reOpenRequest} from "../../action-creators/request-list";
 
 function mapStateToProps(state) {
     return {
@@ -12,8 +12,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return { 
-        requestListData: (search, page) => {
-            dispatch(fetchRequestEnvelopeList(search, page))
+        requestListData: (search, page, toggle) => {
+            dispatch(fetchRequestEnvelopeList(search, page, toggle))
+        },
+        onClose: (id) => {
+            dispatch(closeRequest(id))
+        },
+        onReOpen: (id) => {
+            dispatch(reOpenRequest(id))
         }
     }
 }

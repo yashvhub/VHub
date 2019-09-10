@@ -1,44 +1,63 @@
 import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
-import {Table, Grid, Form, Button, Loader, Pagination, Dropdown} from 'semantic-ui-react';
+import {Table, Grid, Form, Button, Loader, Pagination, Dropdown, Radio} from 'semantic-ui-react';
 
-function RequestList({requestLists, requestListData, isFetching, page}) {
+function RequestList({requestLists, requestListData, isFetching, page, onClose, onReOpen}) {
     const [search, setSearch] = useState('');
     const [number, setNumber] = useState('');
+    const [load, setLoad] = useState(false);
+    const [toggle, setToggle] = useState(false);
 
     const options = [
         {key: '1', text: '5', value: 5 },
         {key: '2', text: '10', value: 10 },
         {key: '3', text: '15', value: 15 },
         {key: '4', text: '20', value: 20 }
-    ]
+    ];
 
     useEffect(() => {
-        requestListData()
-    }, [requestListData]);
+        requestListData(undefined, undefined, toggle);
+        if(load) {
+            setLoad(!load)
+        }
+    }, [requestListData, load, toggle]);
 
     const handleSearchChange = (e, {value}) => {
         setSearch(value);
         if(value === ''){
-            requestListData()
+            requestListData(undefined, undefined, toggle)
         }
     };
 
     const handleChange = (e, {value}) => {
         setNumber(value)
         if(value) {
-            requestListData(search, {...page, size: value})
+            requestListData(search, {...page, size: value}, toggle)
         }
     };
 
     const onSearchClick = () => {
-        requestListData(search);
+        requestListData(search, undefined, toggle);
 
     };
 
     const onPageChange = (e, {activePage}) => {
-        requestListData(search, {...page, page: Number(activePage-1)})
-    }
+        requestListData(search, {...page, page: Number(activePage-1)}, toggle)
+    };
+
+    const closeRequest = (id) => () => {
+        onClose(id)
+        setLoad(true)
+    };
+
+    const onToggle = () => {
+        setToggle(!toggle)
+    };
+
+    const onReOpenRequest = (id) => () => {
+        onReOpen(id)
+        setLoad(true)
+    };
 
     const PaginationExamplePagination = () => <Pagination defaultActivePage={page.number+1} totalPages={page.totalPages} onPageChange={onPageChange}/>;
 
@@ -68,6 +87,10 @@ function RequestList({requestLists, requestListData, isFetching, page}) {
                 </Table.Cell>
                 <Table.Cell>
                     <Link to={`/confirm/${requestList.id}`}>{requestList.requestStatus.status}</Link>
+                </Table.Cell>
+                <Table.Cell>
+                    {requestList.requestStatus.status === 'CONFIRMED' ? <Button onClick={closeRequest(requestList.id)}>Close Request</Button> : null}
+                    {requestList.requestStatus.status === 'CLOSED' ? <Button onClick={onReOpenRequest(requestList.id)}>ReOpen Request</Button> : null}
                 </Table.Cell>
             </Table.Row>
         )
@@ -107,6 +130,11 @@ function RequestList({requestLists, requestListData, isFetching, page}) {
                         <Table.HeaderCell>Client</Table.HeaderCell>
                         <Table.HeaderCell>Manager</Table.HeaderCell>
                         <Table.HeaderCell>Status</Table.HeaderCell>
+                        <Table.HeaderCell>
+                            <Grid.Column>
+                                <Radio toggle onChange={onToggle}  />
+                            </Grid.Column>
+                        </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>

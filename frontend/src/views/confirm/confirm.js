@@ -1,6 +1,18 @@
 import React from 'react';
 import {Redirect} from 'react-router';
-import {Form, Grid, Button, Loader, List, Segment, Divider, Header, Message} from 'semantic-ui-react';
+import {
+    Form,
+    Grid,
+    Button,
+    Loader,
+    List,
+    Segment,
+    Divider,
+    Header,
+    Message,
+    Checkbox,
+    Comment
+} from 'semantic-ui-react';
 import ConfirmTable from './confirmTable';
 
 class ConfirmPage extends React.Component{
@@ -8,12 +20,16 @@ class ConfirmPage extends React.Component{
         super(props)
 
         this.state = {
+            collapsed: false,
+            newComment:'',
             shouldRedirect: false,
             formSuccess: false,
             selectedResources: [],
             selectedBooleans: [],
         }
     }
+
+    handleCheckbox = (e) => this.setState({collapsed: !this.state.collapsed});
 
     async componentWillMount() {
         await this.props.fetchRequestEnvelope(Number(this.props.match.params.id));
@@ -63,11 +79,29 @@ class ConfirmPage extends React.Component{
             }
         }
 
+        let sortedComments = [];
+
+        if(this.props.requestEnvelope){
+            sortedComments = this.props.requestEnvelope.requestComments.sort((a,b) => {
+                return new Date(a.createdAt) - new Date(b.createdAt)
+            })
+        }
+
+        const handleCommentChange = (event) => {
+            this.setState({newComment: event.target.value});
+        }
+
         const confirmButton = async () => {
             let response = await this.props.confirmInterview(this.state.selectedResources, this.props.requestEnvelope.id)
             if(response){
                 this.setState({formSuccess:true})
             }
+        }
+
+        const handleComment = () => {
+            this.props.postComment(this.state.newComment,this.props.requestEnvelope.id, sessionStorage.getItem('token'));
+            this.props.fetchRequestEnvelope(Number(this.props.match.params.id))
+            this.setState({newComment: ""})
         }
 
         const value = this.props.requestEnvelope.proposalType.type.toLowerCase();
@@ -149,7 +183,30 @@ class ConfirmPage extends React.Component{
                     }
 
                     <br/>
-                    <Form.TextArea label='Comments' placeholder='Comments...' rows='6'/>
+                    <Checkbox label='Collapse comments' value={this.state.collapsed} onChange={this.handleCheckbox} />
+                    <Comment.Group collapsed={this.state.collapsed} threaded>
+                        <Header as='h3' dividing>
+                            Comments
+                        </Header>
+                        {sortedComments.map(comment => (
+                            <Message>
+                            <Comment>
+                                <Comment.Content>
+                                    <Comment.Author>{`${comment.author.firstName} ${comment.author.lastName}`}</Comment.Author>
+                                    <Comment.Metadata>
+                                        <div>Commented on: {comment.createdAt}</div>
+                                    </Comment.Metadata>
+                                    <Comment.Text>{comment.comment}</Comment.Text>
+                                </Comment.Content>
+                            </Comment>
+                            </Message>
+                        ))}
+
+
+                        <Form.TextArea name="comment" value={this.state.newComment} onChange={handleCommentChange}/>
+                        <Button content='Add Reply' labelPosition='left' icon='edit' onClick={handleComment} />
+
+                    </Comment.Group>
                     <Message success header='Form Completed' content="Request Confirmed Successfully" />
                     <Form.Group widths='equal'>
                         <Button icon='check' label='Confirm Selection' onClick={confirmButton}/>
