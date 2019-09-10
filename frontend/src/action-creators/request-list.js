@@ -1,5 +1,10 @@
 import RequestEnvelopes from '../API/request-envelopes'
-import {REQUEST_REQUEST_LIST_DATA, RECEIVE_REQUEST_LIST_DATA, INVALIDATE_REQUEST_LIST_DATA} from "./actions";
+import {
+    REQUEST_REQUEST_LIST_DATA,
+    RECEIVE_REQUEST_LIST_DATA,
+    INVALIDATE_REQUEST_LIST_DATA,
+    CLOSE_REQUEST
+} from "./actions";
 
 export function requestRequestListsData() {
     return {
@@ -20,19 +25,26 @@ export function invalidateRequestListData() {
     }
 }
 
-export function fetchRequestEnvelopeList(name, page={}) {
+export function fetchRequestEnvelopeList(name, page={}, toggle) {
     return async function(dispatch,getState) {
         const config = {
             params: {
                 projection: "ListRequestEnvelope",
                 size: getState().requestLists.page.size,
-                ...page
+                ...page,
             }
         };
+        if(toggle) {
+            config.params.status = 'CLOSED'
+        }
         try {
             dispatch(requestRequestListsData())
             let response, status;
-            if(name) {
+            if(toggle && name) {
+                [response, status] = await RequestEnvelopes.getByNameToggled(name, config)
+            } else if(toggle) {
+                [response, status] = await RequestEnvelopes.getAllToggled(config)
+            } else if(name) {
                 [response, status] = await RequestEnvelopes.getByName(name, config)
             } else {
                 [response, status] = await RequestEnvelopes.getAll(config)
@@ -45,6 +57,26 @@ export function fetchRequestEnvelopeList(name, page={}) {
         } catch (e) {
             dispatch(invalidateRequestListData())
             console.error(e);
+        }
+    }
+}
+
+export function closeRequest(id) {
+    return async () => {
+        try {
+            await RequestEnvelopes.closeRequestPatch(id)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+}
+
+export function reOpenRequest(id) {
+    return async () => {
+        try {
+            await RequestEnvelopes.reOpenRequestPatch(id)
+        } catch (e) {
+            console.error(e)
         }
     }
 }

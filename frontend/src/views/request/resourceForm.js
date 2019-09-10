@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Form, Grid, Input, Label, Divider, Icon} from 'semantic-ui-react';
+import {Form, Grid, Input, Label, Divider, Message} from 'semantic-ui-react';
 
 function ResourceForm (props){
     const [newSkill, setNewSkill] = useState('');
@@ -36,6 +36,7 @@ function ResourceForm (props){
 
     return(
         <>
+            <Message>
             <h3>Resource {index+1}</h3>
             <Form.Group widths='equal'>
                 <Form.Input 
@@ -79,6 +80,7 @@ function ResourceForm (props){
                         />
 
             <Divider/>
+            </Message>
         </>
     )
 }

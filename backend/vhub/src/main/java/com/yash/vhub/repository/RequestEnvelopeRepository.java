@@ -19,4 +19,6 @@ public interface RequestEnvelopeRepository extends JpaRepository<RequestEnvelope
 	Page<RequestEnvelope> findByRequesterNameByRequestDateDesc(@Param("name") String name, Pageable pageRequest );
 	
 	Page<RequestEnvelope> findAllByOrderByRequestDateDesc(Pageable pageRequest );
+
+	Page<RequestEnvelope> findAllByRequestStatus_StatusIs(String status, Pageable pageRequest);
 }

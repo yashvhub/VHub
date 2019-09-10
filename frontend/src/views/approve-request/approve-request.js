@@ -137,6 +137,7 @@ class ApproveRequestForm extends React.Component {
                                 Comments
                             </Header>
                             {sortedComments.map(comment => (
+                                <Message>
                                 <Comment>
                                     <Comment.Content>
                                         <Comment.Author>{`${comment.author.firstName} ${comment.author.lastName}`}</Comment.Author>
@@ -146,6 +147,7 @@ class ApproveRequestForm extends React.Component {
                                         <Comment.Text>{comment.comment}</Comment.Text>
                                     </Comment.Content>
                                 </Comment>
+                                </Message>
                             ))}
 
 
