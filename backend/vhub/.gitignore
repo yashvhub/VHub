@@ -30,6 +30,6 @@ build/
 ### VS Code ###
 .vscode/
 
-../backend/vhub/src/main/resources/application.properties
+vhub/src/main/resources/application.properties
 
 bin
