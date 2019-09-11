@@ -15,10 +15,10 @@ public interface RequestEnvelopeRepository extends JpaRepository<RequestEnvelope
 	@Query("SELECT e FROM RequestEnvelope e INNER JOIN e.requester r WHERE CONCAT(r.firstName, ' ', r.lastName) LIKE %:name%")
 	Page<RequestEnvelope> findByRequesterName(@Param("name") String name, Pageable pageRequest );
 	
-	@Query("SELECT e FROM RequestEnvelope e INNER JOIN e.requester r WHERE CONCAT(r.firstName, ' ', r.lastName) LIKE %:name% ORDER BY e.requestDate DESC")
-	Page<RequestEnvelope> findByRequesterNameByRequestDateDesc(@Param("name") String name, Pageable pageRequest );
+	@Query("SELECT e FROM RequestEnvelope e INNER JOIN e.requester r WHERE e.requestStatus <> 'CLOSED' AND CONCAT(r.firstName, ' ', r.lastName) LIKE %:name% ORDER BY e.requestDate DESC")
+	Page<RequestEnvelope> findByRequesterNameByRequestStatus_StatusIsNotClosedOrderByRequestDateDesc(@Param("name") String name, Pageable pageRequest );
 	
-	Page<RequestEnvelope> findAllByOrderByRequestDateDesc(Pageable pageRequest );
+	Page<RequestEnvelope> findAllByRequestStatus_StatusIsNotOrderByRequestDateDesc(Pageable pageRequest, String status );
 
 	Page<RequestEnvelope> findAllByRequestStatus_StatusIs(String status, Pageable pageRequest);
 }

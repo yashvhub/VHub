@@ -47,7 +47,7 @@ export function fetchRequestEnvelopeList(name, page={}, toggle) {
             } else if(name) {
                 [response, status] = await RequestEnvelopes.getByName(name, config)
             } else {
-                [response, status] = await RequestEnvelopes.getAll(config)
+                [response, status] = await RequestEnvelopes.getAll("CLOSED", config)
             }
             if(response && !getState().requestLists.didInvalidate){
                 dispatch(receiveRequestListData(response));

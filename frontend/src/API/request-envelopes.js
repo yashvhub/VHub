@@ -124,7 +124,7 @@ class RequestEnvelopeRepository extends Repository {
 
     async getByName(name, config = {}) {
         try {
-            const response = await API.get(`${this.url}/search/findByRequesterNameByRequestDateDesc`, {
+            const response = await API.get(`${this.url}/search/findByRequesterNameByRequestStatus_StatusIsNotClosedOrderByRequestDateDesc`, {
                 ...config,
                 params: {
                     ...config.params,
@@ -137,9 +137,15 @@ class RequestEnvelopeRepository extends Repository {
         }
     }
 
-    async getAll(config = {}) {
+    async getAll(status,config = {}) {
         try {
-            const response = await API.get(`${this.url}/search/findAllByOrderByRequestDateDesc`, config);
+            const response = await API.get(`${this.url}/search/findAllByRequestStatus_StatusIsNotOrderByRequestDateDesc`,{
+            ...config,
+                    params: {
+                ...config.params,
+                        status
+                }
+            });
             return this.getData(response);
         } catch (e) {
             console.error(e);
