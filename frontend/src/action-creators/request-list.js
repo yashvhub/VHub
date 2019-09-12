@@ -55,26 +55,28 @@ export function fetchRequestEnvelopeList(name, page={}, toggle) {
                 dispatch(invalidateRequestListData());
             }
         } catch (e) {
-            dispatch(invalidateRequestListData())
+            dispatch(invalidateRequestListData());
             console.error(e);
         }
     }
 }
 
-export function closeRequest(id) {
-    return async () => {
+export function closeRequest(id, name, page={}, toggle) {
+    return async (dispatch) => {
         try {
-            await RequestEnvelopes.closeRequestPatch(id)
+            await RequestEnvelopes.closeRequestPatch(id);
+            dispatch(fetchRequestEnvelopeList(name, page={}, toggle));
         } catch (e) {
             console.error(e)
         }
     }
 }
 
-export function reOpenRequest(id) {
-    return async () => {
+export function reOpenRequest(id, name, page, toggle) {
+    return async (dispatch) => {
         try {
-            await RequestEnvelopes.reOpenRequestPatch(id)
+            await RequestEnvelopes.reOpenRequestPatch(id);
+            dispatch(fetchRequestEnvelopeList(name, page={}, toggle));
         } catch (e) {
             console.error(e)
         }
