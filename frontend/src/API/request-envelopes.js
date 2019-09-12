@@ -164,8 +164,9 @@ class RequestEnvelopeRepository extends Repository {
     }
 
     async getByNameToggled(name, config = {}) {
+        console.log('2')
         try {
-            const response = await API.get(`${this.url}/search/findByRequesterNameByRequestDateDesc`, {
+            const response = await API.get(`${this.url}/search/findByRequesterNameByRequestStatus_StatusIsClosedOrderByRequestDateDesc`, {
                 ...config,
                 params: {
                     ...config.params,

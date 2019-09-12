@@ -15,11 +15,11 @@ function mapDispatchToProps(dispatch) {
         requestListData: (search, page, toggle) => {
             dispatch(fetchRequestEnvelopeList(search, page, toggle))
         },
-        onClose: (id) => {
-            dispatch(closeRequest(id))
+        onClose: (id,name, page, toggle) => {
+            dispatch(closeRequest(id,name, page, toggle))
         },
-        onReOpen: (id) => {
-            dispatch(reOpenRequest(id))
+        onReOpen: (id,name, page, toggle) => {
+            dispatch(reOpenRequest(id,name, page, toggle))
         }
     }
 }

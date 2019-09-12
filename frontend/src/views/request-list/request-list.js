@@ -5,7 +5,6 @@ import {Table, Grid, Form, Button, Loader, Pagination, Dropdown, Radio} from 'se
 function RequestList({requestLists, requestListData, isFetching, page, onClose, onReOpen}) {
     const [search, setSearch] = useState('');
     const [number, setNumber] = useState('');
-    const [load, setLoad] = useState(false);
     const [toggle, setToggle] = useState(false);
 
     const options = [
@@ -17,10 +16,7 @@ function RequestList({requestLists, requestListData, isFetching, page, onClose, 
 
     useEffect(() => {
         requestListData(undefined, undefined, toggle);
-        if(load) {
-            setLoad(!load)
-        }
-    }, [requestListData, load, toggle]);
+    }, [requestListData, toggle]);
 
     const handleSearchChange = (e, {value}) => {
         setSearch(value);
@@ -46,17 +42,16 @@ function RequestList({requestLists, requestListData, isFetching, page, onClose, 
     };
 
     const closeRequest = (id) => () => {
-        onClose(id)
-        setLoad(true)
+        onClose(id,undefined, undefined, toggle );
     };
 
     const onToggle = () => {
-        setToggle(!toggle)
+        setToggle(!toggle);
+        setSearch('');
     };
 
     const onReOpenRequest = (id) => () => {
-        onReOpen(id)
-        setLoad(true)
+        onReOpen(id,undefined, undefined, toggle );
     };
 
     const PaginationExamplePagination = () => <Pagination defaultActivePage={page.number+1} totalPages={page.totalPages} onPageChange={onPageChange}/>;
