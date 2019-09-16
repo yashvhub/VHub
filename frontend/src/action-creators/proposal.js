@@ -1,5 +1,6 @@
 import Proposals from '../API/proposals';
 import {REQUEST_PROPOSAL, RECEIVE_PROPOSAL, HAS_ERROR_PROPOSAL} from "./actions";
+import {fetchRequestEnvelope} from "./request-envelopes";
 
 export function requestProposal() {
     return {
@@ -43,7 +44,7 @@ export function fetchProposal(id) {
     }
 }
 
-export function postProposal(proposal) {
+export function postProposal(proposal, id) {
     return async function(dispatch,getState) {
         try {
             dispatch(requestProposal())
@@ -58,6 +59,7 @@ export function postProposal(proposal) {
                 if(response) {
                     const proposal = getState().proposal.item;
                     dispatch(receiveProposal({...proposal, id: response.data.id}));
+                    dispatch(fetchRequestEnvelope(id));
                 }
             }
             if(status) {
