@@ -6,7 +6,7 @@ import { postProposal } from '../../action-creators/proposal';
 
 function Proposals(
     {match: {params}, fetchResources, fetchProposalRequestEnvelope, fetchProposal, postProposal,
-    proposal, proposalRequestEnvelope, resources, isFetching, hasError, vendor}
+    proposal, proposalRequestEnvelope, resources, isFetching, hasError, vendor, fetchRequestEnvelope}
     ) {
     // Component should redirect after submit
     const [fireRedirect, setFireRedirect] = useState(false);
@@ -82,9 +82,9 @@ function Proposals(
             if (proposal.resourceRequestId === proposals.resourceRequestId) {
                 delete proposalBody.resourceRequestId;
             }
-            postProposal(proposalBody);
+            postProposal(proposalBody, params.id);
         } else {
-            postProposal(proposals);
+            postProposal(proposals, params.id);
         }
         setFireRedirect(true);
     }

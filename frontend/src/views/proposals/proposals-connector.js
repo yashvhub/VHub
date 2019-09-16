@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {fetchResources} from '../../action-creators/resources';
-import {fetchProposalRequestEnvelope} from '../../action-creators/request-envelopes';
+import {fetchProposalRequestEnvelope, fetchRequestEnvelope} from '../../action-creators/request-envelopes';
 import {fetchProposal, postProposal} from '../../action-creators/proposal';
 import Proposals from './proposals';
 
@@ -26,6 +26,7 @@ const mapDispatchToProps = {
     fetchProposalRequestEnvelope,
     fetchProposal,
     postProposal,
+    fetchRequestEnvelope
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Proposals);
