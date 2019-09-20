@@ -1,11 +1,31 @@
-import { REQUEST_PROPOSAL, RECEIVE_PROPOSAL, HAS_ERROR_PROPOSAL } from "../action-creators/actions";
+import {
+    REQUEST_PROPOSAL,
+    RECEIVE_PROPOSAL,
+    HAS_ERROR_PROPOSAL,
+    CLEAR_RESOURCE_BANNER,
+    SUBMIT_RESOURCE_SUCCESS
+} from "../action-creators/actions";
 
 function blankState(){
     return {
         isFetching: false,
+        submitResourceSuccess: false
     };
 }
 
+function submitSuccess(state){
+    return{
+        ...state,
+        submitResourceSuccess: true
+    }
+}
+
+function clear(state) {
+    return {
+        ...state,
+        submitResourceSuccess: false
+    }
+}
 
 function requestProposal(state, action) {
     return {
@@ -37,8 +57,10 @@ export default function(state = blankState(), action) {
     const actionHandlers = {
         [REQUEST_PROPOSAL]: requestProposal,
         [RECEIVE_PROPOSAL]: receiveProposal,
-        [HAS_ERROR_PROPOSAL]: hasErrorProposal
-    }
+        [HAS_ERROR_PROPOSAL]: hasErrorProposal,
+        [SUBMIT_RESOURCE_SUCCESS]: submitSuccess,
+        [CLEAR_RESOURCE_BANNER]: clear
+    };
 
     const reducer = actionHandlers[action.type];
 

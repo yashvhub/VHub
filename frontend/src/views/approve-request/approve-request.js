@@ -2,12 +2,11 @@ import React from 'react';
 import { Form, Message, Grid, Button, FormGroup, Loader, Divider, Checkbox, Comment, Header } from 'semantic-ui-react';
 import ApproveResourceForm from './approve-resourceForm-connector';
 import { Redirect, Link } from 'react-router-dom';
-// import Comments from '../common/comments.js';
 import { ApproveProposal } from './approve-proposal.js';
 
 class ApproveRequestForm extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
             shouldRedirect: false,
@@ -53,12 +52,11 @@ class ApproveRequestForm extends React.Component {
 
         const approve = async () => {
             await this.props.approveRequestEnvelope(this.props.requestEnvelope, this.state.selectedApprovers, this.state.selectedInterviewers);
-        }
-
+        };
         const save = async () => {
             await this.props.saveApproveChanges(this.props.requestEnvelope, this.state.selectedApprovers, this.state.selectedInterviewers);
             this.setState({ formSuccess: true });
-        }
+        };
 
         let sortedComments = [];
 
@@ -70,13 +68,13 @@ class ApproveRequestForm extends React.Component {
 
         const handleCommentChange = (event) => {
             this.setState({newComment: event.target.value});
-        }
+        };
 
         const handleComment = () => {
             this.props.postComment(this.state.newComment,this.props.requestEnvelope.id, sessionStorage.getItem('token'));
             this.props.fetchRequestEnvelope(Number(this.props.match.params.id))
             this.setState({newComment: ""})
-        }
+        };
 
         if (!this.props.requestEnvelope && this.state.shouldRedirect) {
             return <Redirect to='/' />
@@ -86,16 +84,16 @@ class ApproveRequestForm extends React.Component {
 
         const resources = this.props.requestEnvelope.resourceRequests.map((resource, index) => {
             return <ApproveResourceForm key={index} id={resource.id} />
-        })
+        });
 
 
         const proposals = this.props.requestEnvelope.resourceRequests.map((resource) => {
             return resource.proposals.map((proposal) => {
                 return <ApproveProposal proposal={proposal} />
             })
-        })
+        });
 
-        const handleInterviewerChange = (e, {name, value}) => this.setState({ [name]: value })
+        const handleInterviewerChange = (e, {name, value}) => this.setState({ [name]: value });
         return (
             <Grid columns='16' centered>
                 <Grid.Column width='10'>
@@ -168,6 +166,6 @@ class ApproveRequestForm extends React.Component {
             </Grid>
         );
     };
-};
+}
 
 export default ApproveRequestForm;

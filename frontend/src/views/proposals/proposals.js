@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import { Grid, Segment, Form, Button, Table, Loader, Header, Container } from 'semantic-ui-react';
+import {Grid, Segment, Form, Button, Table, Loader, Header, Container, Message, Divider} from 'semantic-ui-react';
 import ProposalsTable from './proposals-table';
 import { Redirect } from 'react-router-dom';
-import { postProposal } from '../../action-creators/proposal';
 
 function Proposals(
     {match: {params}, fetchResources, fetchProposalRequestEnvelope, fetchProposal, postProposal,
-    proposal, proposalRequestEnvelope, resources, isFetching, hasError, vendor, fetchRequestEnvelope}
+    proposal, proposalRequestEnvelope, resources, isFetching, hasError, vendor, fetchRequestEnvelope,clearResourceSubmitBanner,submitResourceSuccess, addResource, skillsOptions,fetchSkills}
     ) {
     // Component should redirect after submit
     const [fireRedirect, setFireRedirect] = useState(false);
@@ -19,6 +18,23 @@ function Proposals(
         name: '',
         skill: ''
     })
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [hourlyRate, setHourlyRate] = useState('');
+    const [vendorName, setVendorName] = useState('');
+    const [yearsOfExperience, setYearsOfExperience] = useState('');
+    const [skills, setSkills] = useState([])
+
+    useEffect( () => {
+        setTimeout(() => {
+            clearResourceSubmitBanner();
+        }, 3000)
+    },[submitResourceSuccess]);
+
+    useEffect(() => {
+        fetchSkills();
+    }, [fetchSkills])
+
     useEffect(()=>{
         fetchProposalRequestEnvelope(params.id, "ProposalRequestEnvelope");
         setRequestEnvelopeShouldRedirect(true);
@@ -59,6 +75,20 @@ function Proposals(
         setProposals({...proposals, resources: proposals.resources.filter(r => r.id !== proposal.id)});
     }
 
+    console.log(submitResourceSuccess)
+    const showSuccess = () => {
+        return submitResourceSuccess ? <Grid.Column>
+            <Grid.Row>
+                <Message
+                    success
+                    header='Success!'
+                    content="Resource Submitted"
+                />
+            </Grid.Row>
+            <Divider/>
+        </Grid.Column>: null
+    };
+
     const handleSearchChange = (e, {name, value}) => {
         const newSearchParams = {
             ...searchParams,
@@ -69,6 +99,51 @@ function Proposals(
 
     const onSearchClick = (e) => {
         fetchResources({...searchParams, vendor});
+    }
+
+    const submitResource = () => {
+        const obj ={
+            name: name,
+            email: email,
+            vendor: vendorName,
+            hourlyRate: hourlyRate,
+            yearsOfExperience: yearsOfExperience
+        };
+
+        if((addResource(obj,skills))) {
+            setName('');
+            setVendorName('');
+            setEmail('');
+            setHourlyRate('');
+            setYearsOfExperience('');
+            setSkills(['']);
+        }
+    };
+
+    const handleNameChange = (e) => {
+        setName(e.target.value)
+    }
+
+    const handleVendorChange = (e) => {
+        setVendorName(e.target.value)
+
+    }
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value)
+
+    }
+
+    const handleHourlyRateChange = (e) => {
+        setHourlyRate(e.target.value)
+
+    }
+    const handleYearsOfExpereinceChange = (e) => {
+        setYearsOfExperience(e.target.value)
+
+    };
+
+    const handleSkillChange = (e, {value}) => {
+        setSkills(value)
     }
 
     const onSubmit = (e) => {
@@ -100,12 +175,13 @@ function Proposals(
     </Table.Row>
 
     const tableColumns = ['Name', 'Skills', 'Vendor', 'E-Mail', 'Resume Link', '$/hr', ''];
-    
     return <Grid columns='16' textAlign='center' verticalAlign='top'>
         <Grid.Column width='10'>
             <Grid columns={2}>
                 <Grid.Row>
                 <Grid.Column>
+                    <Form>
+                    <Form.Group widths='equal'>
                 <Form.Input
                   value={searchParams.name}
                   name='name'
@@ -124,6 +200,8 @@ function Proposals(
                   iconPosition='left'
                   placeholder='Skill'
                   />
+                    </Form.Group>
+                    </Form>
                   </Grid.Column>
                   <Grid.Column verticalAlign='bottom'>
                     <Button disabled={isFetching.resources} onClick={onSearchClick}>
@@ -131,9 +209,72 @@ function Proposals(
                         <Loader active inline='centered' size='tiny'/>
                         : 'Search'}
                     </Button>
+                      <Button onClick={submitResource}>Add Resource</Button>
                   </Grid.Column>
                   </Grid.Row>
                   </Grid>
+            <Message>
+                <Form>
+                    <Form.Group widths='equal'>
+                        <Form.Input
+                            fluid
+                            label='Name'
+                            placeholder='Name'
+                            name='name'
+                            value={name}
+                            onChange={handleNameChange}
+                        />
+                        <Form.Input
+                            fluid
+                            label='$/hr'
+                            placeholder='$'
+                            name='hourlyRate'
+                            value={hourlyRate}
+                            onChange={handleHourlyRateChange}
+
+                        />
+                        <Form.Input
+                            fluid
+                            label='Email'
+                            placeholder='Email'
+                            name='email'
+                            value={email}
+                            onChange={handleEmailChange}
+
+                        />
+                        <Form.Input
+                            fluid
+                            label='Years of experience'
+                            placeholder='Years of experience'
+                            name='yearsOfExperience'
+                            value={yearsOfExperience}
+                            onChange={handleYearsOfExpereinceChange}
+
+                        />
+                        <Form.Input
+                            fluid
+                            label='Vendor'
+                            placeholder='Vendor'
+                            name='vendorName'
+                            value={vendorName}
+                            onChange={handleVendorChange}
+                        />
+                        <Form.Dropdown
+                            fluid
+                            multiple selection
+                            label='skills'
+                            options={skillsOptions}
+                            name='skills'
+                            placeholder='Select'
+                            value={skills}
+                            onChange={handleSkillChange}
+                        />
+                    </Form.Group>
+                </Form>
+            </Message>
+           <Grid.Row>
+                {showSuccess()}
+            </Grid.Row>
                 <ProposalsTable
                 label="Search Results"
                 headers={tableColumns}

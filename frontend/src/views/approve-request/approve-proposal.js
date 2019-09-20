@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button, Divider } from 'semantic-ui-react';
+import { Form, Button, Divider, Message } from 'semantic-ui-react';
 import {Link } from 'react-router-dom';
 
 export const ApproveProposal = ({proposal, index}) => {
@@ -7,6 +7,7 @@ export const ApproveProposal = ({proposal, index}) => {
     const resources = proposal.resources.map(((resource,index) => {
         return (
             <>
+                <Message>
             <Form.Group widths='equal'>
                 <Form.Input fluid label='Name' value={resource.name} readOnly />
                 <Form.Input fluid label='Vendor' value={resource.vendor} readOnly />
@@ -21,10 +22,8 @@ export const ApproveProposal = ({proposal, index}) => {
             <Form.Group>
             <Button icon="paperclip" label="Resume" as={Link} to={resource.resumeLink}/>
             </Form.Group>
-            {/* <Form.Group>
-                {skills}
-            </Form.Group> */}
             <Divider section />
+                </Message>
         </>
         )
     }))
