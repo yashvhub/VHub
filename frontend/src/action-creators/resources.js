@@ -1,6 +1,13 @@
 import Resources from "../API/resources";
-import { REQUEST_RESOURCES, RECEIVE_RESOURCES, INVALIDATE_RESOURCES } from "./actions";
-
+import {
+    REQUEST_RESOURCES,
+    RECEIVE_RESOURCES,
+    INVALIDATE_RESOURCES,
+    CLEAR_RESOURCE_BANNER, SUBMIT_RESOURCE_SUCCESS
+} from "./actions";
+import Skills from "../API/skills";
+import API from "../API";
+import ResourceRequests from "../API/resource-requests";
 
 export function requestResources() {
     return {
@@ -18,6 +25,18 @@ export function receiveResources(resources) {
 export function invalidateResources() {
     return {
         type: INVALIDATE_RESOURCES
+    }
+}
+
+export function clearResourceSubmitBanner() {
+    return {
+        type: CLEAR_RESOURCE_BANNER
+    }
+}
+
+export function submitResourceSuccess(){
+    return{
+        type: SUBMIT_RESOURCE_SUCCESS
     }
 }
 
@@ -42,6 +61,31 @@ export function fetchResources({name, skill, vendor}) {
             }
         } catch (e) {
             dispatch(invalidateResources())
+            console.error(e);
+        }
+    }
+}
+
+export function addResource(dataObject, skills) {
+    return async function(dispatch, getState) {
+        try {
+            let response = await Resources.post(dataObject)
+            if(response !== null) {
+                const skillUriList = skills.map(skill =>
+                    `${Skills.getPath()}/${skill}`)
+
+                const skillsResponse = await API.put(`${Resources.getPath()}/${response[0].data.id}/skills`,
+                    skillUriList.join('\n'),
+                    {
+                        headers: {
+                            'Content-Type': 'text/uri-list'
+                        }
+                    });
+            }
+            if(response){
+                dispatch(submitResourceSuccess())
+            }
+        } catch (e) {
             console.error(e);
         }
     }

@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
-import {Form, Grid, Input, Label, Divider} from 'semantic-ui-react';
+import React from 'react';
+import {Form, Label, Divider, Message} from 'semantic-ui-react';
 
  class ApproveResourceForm extends React.Component{
     constructor(props){
-        super(props)
+        super(props);
         this.state={
             newSkill:'',
         }
@@ -11,13 +11,14 @@ import {Form, Grid, Input, Label, Divider} from 'semantic-ui-react';
 
     handleInput = (e) => {
         this.setState({newSkill: e.target.value})
-    }
+    };
     render(){
         const skills = this.props.skills.map((skill)=>{
             return <Label key={skill} color='blue' tag>{skill}</Label>
-        })
+        });
         return(
             <>
+                <Message>
                 <Form.Group widths='equal'>
                     <Form.Input fluid label='Number of Resources' placeholder='quantity' value={this.props.count} readOnly/>
                 </Form.Group>
@@ -29,6 +30,7 @@ import {Form, Grid, Input, Label, Divider} from 'semantic-ui-react';
                     {skills}
                 </Form.Group>
                 <Divider section/>
+                </Message>
             </>
         )
     }

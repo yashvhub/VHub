@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import LoginBox from './login-box';
 import { Redirect } from 'react-router-dom';
 import { Message } from 'semantic-ui-react';

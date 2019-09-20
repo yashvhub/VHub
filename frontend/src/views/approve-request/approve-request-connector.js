@@ -20,7 +20,7 @@ const mapDispatchToProps = {
     fetchApprovers,
     fetchInterviewers,
     saveApproveChanges,
-}
+};
 
 
 export default connect(mapStateToProps,mapDispatchToProps)(approveRequest);

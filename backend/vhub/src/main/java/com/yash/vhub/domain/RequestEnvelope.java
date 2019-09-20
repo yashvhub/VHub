@@ -102,8 +102,8 @@ public class RequestEnvelope {
 	@Transient
 	private int numberOfRequestedResources;
 	
-	public void setNumberOfRequestedResources() {
-		this.numberOfRequestedResources = this.getResourceRequests()
+	public int getNumberOfRequestedResources() {
+		return this.getResourceRequests()
 				.stream()
 				.mapToInt(ResourceRequest::getCount)
 				.sum();
