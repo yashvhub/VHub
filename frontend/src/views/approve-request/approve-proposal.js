@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button, Divider, Message } from 'semantic-ui-react';
+import { Form, Button, Message } from 'semantic-ui-react';
 import {Link } from 'react-router-dom';
 
 export const ApproveProposal = ({proposal, index}) => {
@@ -22,7 +22,6 @@ export const ApproveProposal = ({proposal, index}) => {
             <Form.Group>
             <Button icon="paperclip" label="Resume" as={Link} to={resource.resumeLink}/>
             </Form.Group>
-            <Divider section />
                 </Message>
         </>
         )

@@ -23,7 +23,14 @@ function Proposals(
     const [hourlyRate, setHourlyRate] = useState('');
     const [vendorName, setVendorName] = useState('');
     const [yearsOfExperience, setYearsOfExperience] = useState('');
-    const [skills, setSkills] = useState([])
+    const [skills, setSkills] = useState([]);
+    const [nameError, setNameError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [hourlyRateError, setHourlyRateError] = useState(false);
+    const [vendorNameError, setVendorNameError] = useState(false);
+    const [yearsOfExperienceError, setYearsOfExperienceError] = useState(false);
+    const [skillsError, setSkillsError] = useState(false);
+
 
     useEffect( () => {
         setTimeout(() => {
@@ -75,7 +82,6 @@ function Proposals(
         setProposals({...proposals, resources: proposals.resources.filter(r => r.id !== proposal.id)});
     }
 
-    console.log(submitResourceSuccess)
     const showSuccess = () => {
         return submitResourceSuccess ? <Grid.Column>
             <Grid.Row>
@@ -120,23 +126,59 @@ function Proposals(
         }
     };
 
+    const errorComponent = () => {
+        return (
+            <div>
+                <Divider/>
+                <Message
+                    error
+                    header='Action Forbidden'
+                    content='Please Fill All The Details'
+                />
+            </div>
+        )
+    };
+
+    const validateResources = () => {
+        validateString(name, setNameError);
+        validateString(email, setEmailError);
+        validateString(hourlyRate, setHourlyRateError);
+        validateString(yearsOfExperience, setYearsOfExperienceError);
+        validateString(vendorName, setVendorNameError);
+        validateArray(skills, setSkillsError);
+        if((name.length === 0) || (email.length === 0) || (hourlyRate.length === 0) || (yearsOfExperience.length === 0) || (vendorName.length === 0)
+            || (skills.length === 0) ) {
+            errorComponent();
+        } else {
+            submitResource();
+        }
+    };
+
+    const validateString = (string, callback) => {
+        return string === '' ? callback(true) : callback(false)
+    };
+
+    const validateArray = (array, callback) => {
+        return array.length === 0 ? callback(true) : callback(false)
+    };
+
     const handleNameChange = (e) => {
         setName(e.target.value)
-    }
+    };
 
     const handleVendorChange = (e) => {
         setVendorName(e.target.value)
 
-    }
+    };
     const handleEmailChange = (e) => {
         setEmail(e.target.value)
 
-    }
+    };
 
     const handleHourlyRateChange = (e) => {
         setHourlyRate(e.target.value)
 
-    }
+    };
     const handleYearsOfExpereinceChange = (e) => {
         setYearsOfExperience(e.target.value)
 
@@ -144,7 +186,7 @@ function Proposals(
 
     const handleSkillChange = (e, {value}) => {
         setSkills(value)
-    }
+    };
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -153,7 +195,7 @@ function Proposals(
                 id: params.proposalId,
                 resourceRequestId: proposals.resourceRequestId,
                 resources: proposals.resources
-            }
+            };
             if (proposal.resourceRequestId === proposals.resourceRequestId) {
                 delete proposalBody.resourceRequestId;
             }
@@ -162,7 +204,7 @@ function Proposals(
             postProposal(proposals, params.id);
         }
         setFireRedirect(true);
-    }
+    };
 
     const resourceMapper = (buttonProps) => (resource) => <Table.Row key={resource.id}>
         <Table.Cell>{resource.name}</Table.Cell>
@@ -200,16 +242,13 @@ function Proposals(
                   iconPosition='left'
                   placeholder='Skill'
                   />
+                        <Button disabled={isFetching.resources} onClick={onSearchClick}>
+                            {isFetching.resources ?
+                                <Loader active inline='centered' size='tiny'/>
+                                : 'Search'}
+                        </Button>
                     </Form.Group>
                     </Form>
-                  </Grid.Column>
-                  <Grid.Column verticalAlign='bottom'>
-                    <Button disabled={isFetching.resources} onClick={onSearchClick}>
-                    {isFetching.resources ?
-                        <Loader active inline='centered' size='tiny'/>
-                        : 'Search'}
-                    </Button>
-                      <Button onClick={submitResource}>Add Resource</Button>
                   </Grid.Column>
                   </Grid.Row>
                   </Grid>
@@ -223,6 +262,8 @@ function Proposals(
                             name='name'
                             value={name}
                             onChange={handleNameChange}
+                            onBlur={() => validateString(name,setNameError)}
+                            error={nameError}
                         />
                         <Form.Input
                             fluid
@@ -231,7 +272,8 @@ function Proposals(
                             name='hourlyRate'
                             value={hourlyRate}
                             onChange={handleHourlyRateChange}
-
+                            onBlur={() => validateString(hourlyRate,setHourlyRateError)}
+                            error={hourlyRateError}
                         />
                         <Form.Input
                             fluid
@@ -240,7 +282,8 @@ function Proposals(
                             name='email'
                             value={email}
                             onChange={handleEmailChange}
-
+                            onBlur={() => validateString(email,setEmailError)}
+                            error={emailError}
                         />
                         <Form.Input
                             fluid
@@ -249,7 +292,8 @@ function Proposals(
                             name='yearsOfExperience'
                             value={yearsOfExperience}
                             onChange={handleYearsOfExpereinceChange}
-
+                            onBlur={()=> validateString(yearsOfExperience, setYearsOfExperienceError)}
+                            error={yearsOfExperienceError}
                         />
                         <Form.Input
                             fluid
@@ -258,6 +302,8 @@ function Proposals(
                             name='vendorName'
                             value={vendorName}
                             onChange={handleVendorChange}
+                            onBlur={()=> validateString(vendorName, setVendorNameError)}
+                            error={vendorNameError}
                         />
                         <Form.Dropdown
                             fluid
@@ -268,7 +314,12 @@ function Proposals(
                             placeholder='Select'
                             value={skills}
                             onChange={handleSkillChange}
+                            onBlur={()=> validateArray(skills, setSkillsError)}
+                            error={skillsError}
                         />
+                        <Grid.Row>
+                        <Button onClick={validateResources} floated={'right'}>Add Resource</Button>
+                        </Grid.Row>
                     </Form.Group>
                 </Form>
             </Message>
